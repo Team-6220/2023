@@ -27,6 +27,8 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import frc.robot.commands.DefaultDriveCommand;
+//import frc.robot.commands.TimedCommand;
+import frc.robot.commands.AutoClimbCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.Constants.AutoConstants;
 
@@ -71,6 +73,7 @@ public class RobotContainer {
     // Back button zeros the gyroscope
     new Button(m_controller::getBackButton).whenPressed(m_drivetrainSubsystem::zeroGyroscope);
     new Button(m_controller::getAButton).whenPressed(m_drivetrainSubsystem::lockWheels);
+    new Button(m_controller::getXButton).whenPressed(m_drivetrainSubsystem::autoClimb);
   }
 
   /**

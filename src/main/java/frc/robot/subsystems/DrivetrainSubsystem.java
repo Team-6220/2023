@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.SPI;
 import com.kauailabs.navx.frc.*;
+import frc.robot.commands.AutoClimbCommand;
 
 import static frc.robot.Constants.*;
 
@@ -198,6 +199,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void lockWheels(){
         //toggle parking brake
         this.wheelsLocked = !this.wheelsLocked;
+  }
+  
+  public void autoClimb(){
+        new AutoClimbCommand(2, this, 0.5);
   }
 
   @Override
