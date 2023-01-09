@@ -15,17 +15,17 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 // import edu.wpi.first.wpilibj.kinematics.*;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.SPI;
 import com.kauailabs.navx.frc.*;
-import frc.robot.commands.AutoClimbCommand;
+import edu.wpi.first.wpilibj.Timer;
 
 import static frc.robot.Constants.*;
 
@@ -77,51 +77,25 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule m_frontRightModule;
   private final SwerveModule m_backLeftModule;
   private final SwerveModule m_backRightModule;
-
-  private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.k_DRIVE_KINEMATICS, new Rotation2d(0));
+  private SwerveModulePosition[] positions = new SwerveModulePosition[4];
+  private final SwerveDriveOdometry odometer;
+  private double previousTime;
+  private SwerveModuleState[] previousStates = new SwerveModuleState[4];
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
-  private boolean wheelsLocked = false;
+  
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
-
-    // There are 4 methods you can call to create your swerve modules.
-    // The method you use depends on what motors you are using.
-    //
-    // Mk3SwerveModuleHelper.createFalcon500(...)
-    //   Your module has two Falcon 500s on it. One for steering and one for driving.
-    //
-    // Mk3SwerveModuleHelper.createNeo(...)
-    //   Your module has two NEOs on it. One for steering and one for driving.
-    //
-    // Mk3SwerveModuleHelper.createFalcon500Neo(...)
-    //   Your module has a Falcon 500 and a NEO on it. The Falcon 500 is for driving and the NEO is for steering.
-    //
-    // Mk3SwerveModuleHelper.createNeoFalcon500(...)
-    //   Your module has a NEO and a Falcon 500 on it. The NEO is for driving and the Falcon 500 is for steering.
-    //
-    // Similar helpers also exist for Mk4 modules using the Mk4SwerveModuleHelper class.
-
-    // By default we will use Falcon 500s in standard configuration. But if you use a different configuration or motors
-    // you MUST change it. If you do not, your code will crash on startup.
-    // Setup motor configuration
     m_frontLeftModule = Mk4iSwerveModuleHelper.createFalcon500(
-            // This parameter is optional, but will allow you to see the current state of the module on the dashboard.
             tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                     .withSize(2, 4)
                     .withPosition(0, 0),
-            // This can either be STANDARD or FAST depending on your gear configuration
             Mk4iSwerveModuleHelper.GearRatio.L2,
-            // This is the ID of the drive motor
             FRONT_LEFT_MODULE_DRIVE_MOTOR,
-            // This is the ID of the steer motor
             FRONT_LEFT_MODULE_STEER_MOTOR,
-            // This is the ID of the steer encoder
             FRONT_LEFT_MODULE_STEER_ENCODER,
-            // This is how much the steer encoder is offset from true zero (In our case, zero is facing straight forward)
             FRONT_LEFT_MODULE_STEER_OFFSET
     );
 
-    // We will do the same for the other modules
     m_frontRightModule = Mk4iSwerveModuleHelper.createFalcon500(
             tab.getLayout("Front Right Module", BuiltInLayouts.kList)
                     .withSize(2, 4)
@@ -154,6 +128,18 @@ public class DrivetrainSubsystem extends SubsystemBase {
             BACK_RIGHT_MODULE_STEER_ENCODER,
             BACK_RIGHT_MODULE_STEER_OFFSET
     );
+    this.positions[0] = new SwerveModulePosition(0, new Rotation2d(0));
+    this.positions[1] = new SwerveModulePosition(0, new Rotation2d(0));
+    this.positions[2] = new SwerveModulePosition(0, new Rotation2d(0));
+    this.positions[3] = new SwerveModulePosition(0, new Rotation2d(0));
+    this.odometer = new SwerveDriveOdometry(Constants.k_DRIVE_KINEMATICS, new Rotation2d(0), positions);
+    this.previousStates[0] = new SwerveModuleState(0, new Rotation2d(0));
+    this.previousStates[1] = new SwerveModuleState(0, new Rotation2d(0));
+    this.previousStates[2] = new SwerveModuleState(0, new Rotation2d(0));
+    this.previousStates[3] = new SwerveModuleState(0, new Rotation2d(0));
+
+    this.previousTime = Timer.getFPGATimestamp();
+    
   }
 
   /**
@@ -193,41 +179,28 @@ public class DrivetrainSubsystem extends SubsystemBase {
           m_backRightModule.set(0, 0);
   }
   public void resetOdometry(Pose2d pose){
-        odometer.resetPosition(pose, getRotation2d());
+        odometer.resetPosition(getRotation2d(), this.positions, pose);
   }
 
-  public void lockWheels(){
-        //toggle parking brake
-        this.wheelsLocked = !this.wheelsLocked;
-  }
-  
-  public void autoClimb(){
-        new AutoClimbCommand(2, this, 0.5);
+  public void updatePositions(SwerveModuleState[] states){
+        double elapsedTime = Timer.getFPGATimestamp() - this.previousTime;
+        SwerveModulePosition[] previousPositions = this.positions;
+        for(int i = 0; i < 4 ; i++){
+             double avgVelocity = (previousStates[0].speedMetersPerSecond+states[0].speedMetersPerSecond)/2;   
+             positions[i] = new SwerveModulePosition(previousPositions[0].distanceMeters + (elapsedTime * avgVelocity), states[i].angle);
+        }
+        
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Brakes", !wheelsLocked);
-    if(!wheelsLocked){
-        SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
-        SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
-        m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
-        m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
-        m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
-        m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
-        odometer.update(
-                    getRotation2d(),
-                    new SwerveModuleState(m_frontLeftModule.getDriveVelocity(), new Rotation2d(m_frontLeftModule.getSteerAngle())),
-                    new SwerveModuleState(m_frontRightModule.getDriveVelocity(), new Rotation2d(m_frontRightModule.getSteerAngle())),
-                    new SwerveModuleState(m_backLeftModule.getDriveVelocity(), new Rotation2d(m_backLeftModule.getSteerAngle())),
-                    new SwerveModuleState(m_backRightModule.getDriveVelocity(), new Rotation2d(m_backRightModule.getSteerAngle()))
-        );
-    }else{
-        //point wheels inward to prevent slipping on charge station
-        m_frontLeftModule.set(0, Math.toRadians(45));
-        m_frontRightModule.set(0, Math.toRadians(-45));
-        m_backLeftModule.set(0, Math.toRadians(-45));
-        m_backRightModule.set(0, Math.toRadians(45)); 
-    }
+    SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
+    SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
+    m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
+    m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
+    m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
+    m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
+    updatePositions(states);
+    odometer.update(getRotation2d(),this.positions);
   }
 }

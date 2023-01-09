@@ -1,25 +1,27 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj2.command.Command;
 
 public abstract class TimedCommand extends Command{
     public TimedCommand(double time){
-        super(time);
+        //super(time);
     }
     
     @Override
-    protected void execute() {
+    public void execute() {
         //do nothing
     }
 
     @Override
-    protected boolean isFinished() {
+    public boolean isFinished() {
         return isTimedOut();
     }
 
-
+    private boolean isTimedOut(){
+        if()
+    }
     @Override
-    protected void interrupted() {
+    public void interrupted() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }
