@@ -17,20 +17,25 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.XboxController;
+//import edu.wpi.first.wpilibj.GenericHID;
+//import edu.wpi.first.wpilibj.XboxController;
 //import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.*;
+import edu.wpi.first.wpilibj2.command.*;
 //import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
+/*import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
-import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.Trigger;*/
 import frc.robot.commands.DefaultDriveCommand;
 //import frc.robot.commands.TimedCommand;
-import frc.robot.commands.AutoClimbCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 import frc.robot.Constants.AutoConstants;
+
+//comands import
+import frc.robot.commands.AutoClimbCommand;
+import frc.robot.commands.ZeroGyroCommand;
+import frc.robot.commands.LockWheelsCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -42,7 +47,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
 
-  private final XboxController m_controller = new XboxController(0);
+  private final CommandXboxController m_controller = new CommandXboxController(0);
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -71,9 +76,12 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Back button zeros the gyroscope
-    new Button(m_controller::getBackButton).whenPressed(m_drivetrainSubsystem::zeroGyroscope);
-    new Button(m_controller::getAButton).whenPressed(m_drivetrainSubsystem::lockWheels);
-    new Button(m_controller::getXButton).whenPressed(m_drivetrainSubsystem::autoClimb);
+    Trigger back  = m_controller.back();
+    m_controller.back().onTrue(new ZeroGyroCommand(m_drivetrainSubsystem));
+    Trigger a = m_controller.a();
+    m_controller.back().onTrue(new LockWheelsCommand(m_drivetrainSubsystem));
+    Trigger x = m_controller.x();
+    m_controller.back().onTrue(new AutoClimbCommand(m_drivetrainSubsystem));
   }
 
   /**
