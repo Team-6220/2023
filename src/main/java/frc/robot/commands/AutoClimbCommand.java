@@ -14,6 +14,8 @@ public class AutoClimbCommand extends SequentialCommandGroup {
     /* Creates an automatic climbing command for the robot.
      * Causes the robot to drive forwards 1 meter at 0.5 meters/sec
      * Ends by engaging the robot brakes
+     * 
+     * Precondition: Robot must be pointed directly at the base of the charging station
      */
     public AutoClimbCommand(DrivetrainSubsystem drivetrainSubsystem){//drives 1m up the ramp, then locks wheels
         //super(runtime);
