@@ -81,6 +81,50 @@ public final class Constants {
                         k_MAX_ANGULAR_SPEED_RADS_PER_SECOND,
                         k_MAX_ANGULAR_ACCELERATION_RADS_PER_SECOND_SQ);
     }
+
+    public static final class ArmConstants{
+        //FIXME set cone high goal angle
+        public static final double k_CONE_HIGH_GOAL_ANGLE_RADIANS = 0;
+        //FIXME set cone mid goal angle
+        public static final double k_CONE_MID_GOAL_ANGLE_RADIANS = 0;
+        //FIXME set cone low goal angle
+        public static final double k_CONE_LOW_GOAL_ANGLE_RADIANS = 0;
+        //FIXME set cone ground pickup angle radians
+        public static final double k_CONE_GROUND_UPRIGHT_PICKUP_ANGLE_RADIANS = 0;
+        //FIXME set cone fallen over ground pickup angle radians
+        public static final double k_CONE_GROUND_DOWN_PICKUP_ANGLE_RADIANS = 0;
+        //FIXME set cone substation pickup angle
+        public static final double k_CONE_SUBSTATION_PICKUP_ANGLE_RADIANS = 0;
+        //FIXME set cube high goal angle
+        public static final double k_CUBE_HIGH_GOAL_ANGLE_RADIANS = 0;
+        //FIXME set cube mid goal angle
+        public static final double k_CUBE_MID_GOAL_ANGLE_RADIANS = 0;
+        //FIXME set cube low goal angle
+        public static final double k_CUBE_LOW_GOAL_ANGLE_RADIANS = 0;
+        //FIXME set cube ground pickup angle
+        public static final double k_CUBE_GROUND_UPRIGHT_PICKUP_ANGLE_RADIANS = 0;
+        //FIXME set cub substation pickup angle
+        public static final double k_CUBE_SUBSTATION_PICKUP_ANGLE_RADIANS = 0;
+    }
+
+    public static final class TelescopeConstants{
+
+    }
+
+    public static final class VisionConstants{
+        //FIXME set limelight angle radians
+        public static final double k_LIMELIGHT_ANGLE_RADIANS = 0;
+        //FIXME set limelight height from ground inches
+        public static final double k_LIMELIGHT_HEIGHT_INCHES = 0;
+        //FIXME set height of goal
+        public static final double k_GOAL_HEIGHT_INCHES = 0;
+    }
+
+    public static final class IntakeConstants{
+        //FIXME set solenoid ports
+        public static final int k_LEFT_SOLENOID_PORT = 0;
+        public static final int k_RIGHT_SOLENOID_PORT = 1;
+    }
 }
 
 
