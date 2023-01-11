@@ -81,6 +81,34 @@ public final class Constants {
                         k_MAX_ANGULAR_SPEED_RADS_PER_SECOND,
                         k_MAX_ANGULAR_ACCELERATION_RADS_PER_SECOND_SQ);
     }
+
+    public static final class ArmConstants{
+        //FIXME
+        public static final double k_CONE_HIGH_GOAL_ANGLE_RADIANS = 0;
+        //FIXME
+        public static final double k_CONE_MID_GOAL_ANGLE_RADIANS = 0;
+        //FIXME
+        public static final double k_CONE_LOW_GOAL_ANGLE_RADIANS = 0;
+        //FIXME
+        public static final double k_CONE_GROUND_UPRIGHT_PICKUP_ANGLE_RADIANS = 0;
+        //FIXME
+        public static final double k_CONE_GROUND_DOWN_PICKUP_ANGLE_RADIANS = 0;
+        //FIXME
+        public static final double k_CONE_SUBSTATION_PICKUP_ANGLE_RADIANS = 0;
+        
+    }
+
+    public static final class TelescopeConstants{
+
+    }
+
+    public static final class VisionConstants{
+
+    }
+
+    public static final class IntakeConstants{
+
+    }
 }
 
 
