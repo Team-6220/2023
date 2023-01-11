@@ -21,7 +21,7 @@ public class AutoClimbCommand extends SequentialCommandGroup {
         
         new DriveDistanceCommand(m_drivetrainSubsystem, 1, 0.5);
 
-        new LockWheelsCommand(m_drivetrainSubsystem);
+        new LockWheels(m_drivetrainSubsystem);
     }
 
 }
