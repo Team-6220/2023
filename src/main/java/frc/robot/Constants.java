@@ -34,22 +34,22 @@ public final class Constants {
     public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 2; 
     public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 4; 
     public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 0; 
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0); // FIXME Measure and set front left steer offset
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(189.5); // FIXME Measure and set front left steer offset
 
     public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 0; 
     public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 1;
     public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 3;
-    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0);// FIXME Measure and set front right steer offset
+    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(186.9);// FIXME Measure and set front right steer offset
 
     public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 7; 
     public static final int BACK_LEFT_MODULE_STEER_MOTOR = 3; 
     public static final int BACK_LEFT_MODULE_STEER_ENCODER = 1; 
-    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0);// FIXME Measure and set back left steer offset
+    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(195.4);// FIXME Measure and set back left steer offset
 
     public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 5;
     public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 6; 
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 2; 
-    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0);
+    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(305.0);
 
     public static final double k_TELEDRIVE_MAX_ACCELERATION = 3/2;
     public static final double k_TELEDRIVE_MAX_ANGULAR_ACCELERATION = 3/2;
@@ -72,9 +72,9 @@ public final class Constants {
         public static final double k_MAX_ANGULAR_SPEED_RADS_PER_SECOND = Constants.k_PHYSICAL_MAX_ANGULAR_SPEED_RAD_PER_SECOND / 10;
         public static final double k_MAX_ACCELERATION_METERS_PER_SECOND_SQ = 3;
         public static final double k_MAX_ANGULAR_ACCELERATION_RADS_PER_SECOND_SQ = Math.PI / 4;
-        public static final double k_PX_CONTROLLER = 1.5;
-        public static final double k_PY_CONTROLLER = 1.5;
-        public static final double K_PTHETA_CONTROLLER = 3;
+        public static final double k_PX_CONTROLLER = .5;
+        public static final double k_PY_CONTROLLER = .5;
+        public static final double k_PTHETA_CONTROLLER = .5;
     
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints = //
                 new TrapezoidProfile.Constraints(

@@ -174,10 +174,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
           return Rotation2d.fromDegrees(getHeading());
   }
   public void stopModules(){
-          m_frontLeftModule.set(0, 0);
-          m_frontRightModule.set(0, 0);
-          m_backLeftModule.set(0, 0);
-          m_backRightModule.set(0, 0);
+          m_frontLeftModule.set(0, m_frontLeftModule.getSteerAngle());
+          m_frontRightModule.set(0, m_frontRightModule.getSteerAngle());
+          m_backLeftModule.set(0, m_backLeftModule.getSteerAngle());
+          m_backRightModule.set(0, m_backRightModule.getSteerAngle());
   }
   public void resetOdometry(Pose2d pose){
         odometer.resetPosition(getRotation2d(), this.positions, pose);
@@ -194,26 +194,26 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public void lockWheels(){
-        //toggle parking brake
+        //turn on parking brake
         this.wheelsLocked = true;
   }
 
   public void unlockWheels(){
+        //turn off parking brake
         this.wheelsLocked = false;
-        m_chassisSpeeds = new ChassisSpeeds(0d, 0d,0.0d);
-        SwerveModuleState[] states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
+  }
+
+  public void setModuleStates(SwerveModuleState[] states){
         SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
         m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
         m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
         m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
-        m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());   
-        updatePositions(states);
-        odometer.update(getRotation2d(), this.positions);
+        m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
   }
 
   @Override
   public void periodic() {
-        SwerveModuleState[] states;
+    SwerveModuleState[] states;
     if(!this.wheelsLocked){
         states = m_kinematics.toSwerveModuleStates(m_chassisSpeeds);
     }
@@ -226,11 +226,12 @@ public class DrivetrainSubsystem extends SubsystemBase {
         };
         states = temp;
     }
+    //setModuleStates(states);
     SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
-    m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
-    m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
-    m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
-    m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());   
+        m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
+        m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
+        m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
+        m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
     updatePositions(states);
     odometer.update(getRotation2d(), this.positions);
   }

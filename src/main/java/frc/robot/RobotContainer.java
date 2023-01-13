@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.LockWheels;
+import frc.robot.commands.SampleAutoCommand;
 import frc.robot.commands.SmallAdjustmentCommand;
 import frc.robot.commands.UnlockWheels;
 import frc.robot.commands.ZeroGyroscope;
@@ -68,7 +69,7 @@ public class RobotContainer {
     new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheels(m_drivetrainSubsystem));
     new Trigger(m_controller::getBButtonPressed).onTrue(new UnlockWheels(m_drivetrainSubsystem));
     new Trigger(m_controller::getXButtonPressed).onTrue(new SmallAdjustmentCommand(m_drivetrainSubsystem, 1, .1));
-    
+
   }
 
   /**
@@ -77,6 +78,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return new SampleAutoCommand(m_drivetrainSubsystem);
   }
 }
