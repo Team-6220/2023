@@ -56,6 +56,8 @@ public final class Constants {
     public static final double k_PHYSICAL_MAX_SPEED_METERS_PER_SECOND = DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND;
     public static final double k_PHYSICAL_MAX_ANGULAR_SPEED_RAD_PER_SECOND = DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
 
+    public static final double ticksPerRevolution = 2048;
+    public static final double distancePerRev = 4 * Math.PI;
     public static final SwerveDriveKinematics k_DRIVE_KINEMATICS = new SwerveDriveKinematics(
           // Front left
           new Translation2d(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0),

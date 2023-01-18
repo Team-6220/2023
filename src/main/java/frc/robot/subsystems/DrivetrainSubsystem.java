@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.*;
 import com.swervedrivespecialties.swervelib.Mk4iSwerveModuleHelper;
 import com.swervedrivespecialties.swervelib.SdsModuleConfigurations;
 import com.swervedrivespecialties.swervelib.SwerveModule;
@@ -77,6 +78,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule m_frontRightModule;
   private final SwerveModule m_backLeftModule;
   private final SwerveModule m_backRightModule;
+  // Motor controllers for TalonFX. Used to access integrated encoders
+  private final TalonFX m_frontLeftDrive;
+  private final TalonFX m_frontRightDrive;
+  private final TalonFX m_backLeftDrive;
+  private final TalonFX m_backRightDrive;
   private SwerveModulePosition[] positions = new SwerveModulePosition[4];
   private final SwerveDriveOdometry odometer;
   private boolean wheelsLocked = false;
@@ -86,6 +92,11 @@ public class DrivetrainSubsystem extends SubsystemBase {
   
   public DrivetrainSubsystem() {
     ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
+    m_frontLeftDrive = new TalonFX(FRONT_LEFT_MODULE_DRIVE_MOTOR);
+    m_frontRightDrive = new TalonFX(FRONT_RIGHT_MODULE_DRIVE_MOTOR);
+    m_backLeftDrive = new TalonFX(BACK_LEFT_MODULE_DRIVE_MOTOR);
+    m_backRightDrive = new TalonFX(BACK_RIGHT_MODULE_DRIVE_MOTOR);
+
     m_frontLeftModule = Mk4iSwerveModuleHelper.createFalcon500(
             tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                     .withSize(2, 4)
@@ -234,5 +245,27 @@ public class DrivetrainSubsystem extends SubsystemBase {
         m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
     updatePositions(states);
     odometer.update(getRotation2d(), this.positions);
+  }
+
+  //encoder access
+  public double getEncoderFL(){
+        double d = m_frontLeftDrive.getSelectedSensorPosition();
+        double rev = d * ticksPerRevolution;
+        return rev * distancePerRev;
+  }
+  public double getEncoderFR(){
+        double d = m_frontRightDrive.getSelectedSensorPosition();
+        double rev = d * ticksPerRevolution;
+        return rev * distancePerRev;
+  }
+  public double getEncoderBL(){
+        double d = m_backLeftDrive.getSelectedSensorPosition();
+        double rev = d * ticksPerRevolution;
+        return rev * distancePerRev;
+  }
+  public double getEncoderBR(){
+        double d = m_backRightDrive.getSelectedSensorPosition();
+        double rev = d * ticksPerRevolution;
+        return rev * distancePerRev;
   }
 }
