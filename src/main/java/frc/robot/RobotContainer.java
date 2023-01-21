@@ -20,7 +20,7 @@ import frc.robot.commands.SmallAdjustmentCommand;
 import frc.robot.commands.UnlockWheels;
 import frc.robot.commands.ZeroGyroscope;
 //import frc.robot.commands.TimedCommand;
-//import frc.robot.commands.AutoClimbCommand;
+import frc.robot.commands.AutoClimbCommand;
 import frc.robot.subsystems.DrivetrainSubsystem;
 // import frc.robot.Constants.AutoConstants;
 
@@ -79,6 +79,7 @@ public class RobotContainer {
     new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheels(m_drivetrainSubsystem));
     new Trigger(m_controller::getBButtonPressed).onTrue(new UnlockWheels(m_drivetrainSubsystem));
     new Trigger(m_controller::getXButtonPressed).onTrue(new SmallAdjustmentCommand(m_drivetrainSubsystem, 1, .1));
+    new Trigger(m_controller::getYButtonPressed).onTrue(new AutoClimbCommand(m_drivetrainSubsystem));
     // new Trigger(m_js1::getTriggerPressed).onTrue(new ZeroGyroscope(m_drivetrainSubsystem));
     // twoButton.onTrue(new LockWheels(m_drivetrainSubsystem));
     // threeButton.onTrue(new UnlockWheels(m_drivetrainSubsystem));

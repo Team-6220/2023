@@ -7,13 +7,11 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 
 public class AutoClimbCommand extends SequentialCommandGroup {
     //private double runtime;
-    private final DrivetrainSubsystem m_drivetrainSubsystem;
 
-    public AutoClimbCommand(double runtime, DrivetrainSubsystem drivetrainSubsystem){
-        this.m_drivetrainSubsystem = drivetrainSubsystem;
-
-        new DriveDistanceCommand(m_drivetrainSubsystem, 1);
-
-        new LockWheels(m_drivetrainSubsystem);
+    public AutoClimbCommand(DrivetrainSubsystem drivetrainSubsystem){
+        addCommands(
+            new DriveDistanceCommand(drivetrainSubsystem, 1),
+            new LockWheels(drivetrainSubsystem)
+        );
     }
 }

@@ -17,15 +17,15 @@ public class DriveDistanceCommand extends CommandBase{
         this.goal = goal;
         init_t = m_drivetrainSubsystem.getPose().getTranslation();
     }
-
+ 
     @Override
     public void execute(){
-        Pose2d cur = m_drivetrainSubsystem.getPose();
-        if(Math.abs(cur.getTranslation().getDistance(init_t)) < goal){
-            m_drivetrainSubsystem.drive(new ChassisSpeeds(0.5,0,0));
-        }else{
-            end(false);
-        }
+        m_drivetrainSubsystem.drive(new ChassisSpeeds(0.5,0,0));
+    }
+
+    @Override
+    public boolean isFinished(){
+        return !(Math.abs(m_drivetrainSubsystem.getPose().getTranslation().getDistance(init_t))<goal);
     }
 
     @Override

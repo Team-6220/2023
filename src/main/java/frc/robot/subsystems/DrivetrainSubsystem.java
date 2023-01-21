@@ -99,7 +99,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_backLeftDrive = new TalonFX(BACK_LEFT_MODULE_DRIVE_MOTOR);
     m_backRightDrive = new TalonFX(BACK_RIGHT_MODULE_DRIVE_MOTOR);
     m_frontLeftModule = Mk4iSwerveModuleHelper.createFalcon500(
-        tab.getLayout("Back Left Module", BuiltInLayouts.kList)
+        tab.getLayout("Froht Left Module", BuiltInLayouts.kList)
                      .withSize(2, 4)
                      .withPosition(0, 0),
             Mk4iSwerveModuleHelper.GearRatio.L2,

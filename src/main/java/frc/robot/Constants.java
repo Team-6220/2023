@@ -34,12 +34,12 @@ public final class Constants {
     public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 7; 
     public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 3; 
     public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 1; 
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(292.6737); // FIXME Measure and set front left steer offset
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(112.6737); // FIXME Measure and set front left steer offset
 
     public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 0; 
     public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 1;
     public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 3;
-    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(160.2125);// FIXME Measure and set front right steer offset
+    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(340.2125);// FIXME Measure and set front right steer offset
 
     public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 2; 
     public static final int BACK_LEFT_MODULE_STEER_MOTOR = 4; 
@@ -55,9 +55,6 @@ public final class Constants {
     public static final double k_TELEDRIVE_MAX_ANGULAR_ACCELERATION = 3/4;
     public static final double k_PHYSICAL_MAX_SPEED_METERS_PER_SECOND = DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND/2;
     public static final double k_PHYSICAL_MAX_ANGULAR_SPEED_RAD_PER_SECOND = DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND/2;
-
-    public static final double ticksPerRevolution = 2048;
-    public static final double distancePerRev = 4 * Math.PI;
 
     public static final double ticksPerRevolution = 2048;
     public static final double distancePerRev = 4 * Math.PI;
