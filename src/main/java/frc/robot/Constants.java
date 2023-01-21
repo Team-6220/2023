@@ -23,38 +23,41 @@ public final class Constants {
      *
      * Should be measured from center to center.
      */
-    public static final double DRIVETRAIN_TRACKWIDTH_METERS = .6; 
+    public static final double DRIVETRAIN_TRACKWIDTH_METERS = .521; 
     /**
      * The front-to-back distance between the drivetrain wheels.
      *
      * Should be measured from center to center.
      */
-    public static final double DRIVETRAIN_WHEELBASE_METERS = .6;
+    public static final double DRIVETRAIN_WHEELBASE_METERS = .6477;
 
-    public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 2; 
-    public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 4; 
-    public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 0; 
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(189.5); // FIXME Measure and set front left steer offset
+    public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 7; 
+    public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 3; 
+    public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 1; 
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(292.6737); // FIXME Measure and set front left steer offset
 
     public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 0; 
     public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 1;
     public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 3;
-    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(186.9);// FIXME Measure and set front right steer offset
+    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(160.2125);// FIXME Measure and set front right steer offset
 
-    public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 7; 
-    public static final int BACK_LEFT_MODULE_STEER_MOTOR = 3; 
-    public static final int BACK_LEFT_MODULE_STEER_ENCODER = 1; 
-    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(195.4);// FIXME Measure and set back left steer offset
+    public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 2; 
+    public static final int BACK_LEFT_MODULE_STEER_MOTOR = 4; 
+    public static final int BACK_LEFT_MODULE_STEER_ENCODER = 0; 
+    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(454.5757);// FIXME Measure and set back left steer offset
 
     public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 5;
     public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 6; 
     public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 2; 
-    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(305.0);
+    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(933.1225);
 
-    public static final double k_TELEDRIVE_MAX_ACCELERATION = 3/2;
-    public static final double k_TELEDRIVE_MAX_ANGULAR_ACCELERATION = 3/2;
-    public static final double k_PHYSICAL_MAX_SPEED_METERS_PER_SECOND = DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND;
-    public static final double k_PHYSICAL_MAX_ANGULAR_SPEED_RAD_PER_SECOND = DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND;
+    public static final double k_TELEDRIVE_MAX_ACCELERATION = 3/4;
+    public static final double k_TELEDRIVE_MAX_ANGULAR_ACCELERATION = 3/4;
+    public static final double k_PHYSICAL_MAX_SPEED_METERS_PER_SECOND = DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND/2;
+    public static final double k_PHYSICAL_MAX_ANGULAR_SPEED_RAD_PER_SECOND = DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND/2;
+
+    public static final double ticksPerRevolution = 2048;
+    public static final double distancePerRev = 4 * Math.PI;
 
     public static final double ticksPerRevolution = 2048;
     public static final double distancePerRev = 4 * Math.PI;
@@ -82,6 +85,11 @@ public final class Constants {
                 new TrapezoidProfile.Constraints(
                         k_MAX_ANGULAR_SPEED_RADS_PER_SECOND,
                         k_MAX_ANGULAR_ACCELERATION_RADS_PER_SECOND_SQ);
+    }
+
+    public static final class OIConstants{
+        public static final double k_JOYSTICK_INPUT_PROFILE = 4;
+        public static final double k_DEADBAND = 0.05;
     }
 
     public static final class ArmConstants{
