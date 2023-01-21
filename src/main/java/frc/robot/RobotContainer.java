@@ -5,9 +5,11 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 //import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 //import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 //import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -34,6 +36,12 @@ public class RobotContainer {
 
   private final XboxController m_controller = new XboxController(0);
   //private final CommandXboxController m_Controller2 = new CommandXboxController(1);
+  // private final Joystick m_js1 = new Joystick(1);
+  // //private final Joystick m_js2 = new Joystick(2);
+  // private final Trigger twoButton = new JoystickButton(m_js1, 2);
+  // private final Trigger threeButton = new JoystickButton(m_js1, 3);
+  // private final Trigger fourButton = new JoystickButton(m_js1, 4);
+
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -44,10 +52,15 @@ public class RobotContainer {
     // Left stick Y axis -> forward and backwards movement
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
+    // m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(m_drivetrainSubsystem,
+    //         ()->(m_js1.getX() * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND),
+    //         ()->(m_js1.getY() * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND),
+    //         ()->(0 * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)
+    // ));
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(m_drivetrainSubsystem,
-            ()->(m_controller.getRawAxis(0) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND),
-            ()->(m_controller.getRawAxis(1) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND),
-            ()->(m_controller.getRawAxis(4) * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)
+            ()->(m_controller.getRawAxis(0)),
+            ()->(m_controller.getRawAxis(1)*-1),
+            ()->(m_controller.getRawAxis(4))
     ));
 
     // Configure the button bindings
@@ -62,14 +75,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
     // Back button zeros the gyroscope
-    // new Button(m_controller::getBackButton).whenPressed(m_drivetrainSubsystem::zeroGyroscope);
-    // new Button(m_controller::getAButton).whenPressed(m_drivetrainSubsystem::lockWheels);
-    // new Button(m_controller::getXButton).whenPressed(m_drivetrainSubsystem::autoClimb);
     new Trigger(m_controller::getBackButton).onTrue(new ZeroGyroscope(m_drivetrainSubsystem));
     new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheels(m_drivetrainSubsystem));
     new Trigger(m_controller::getBButtonPressed).onTrue(new UnlockWheels(m_drivetrainSubsystem));
     new Trigger(m_controller::getXButtonPressed).onTrue(new SmallAdjustmentCommand(m_drivetrainSubsystem, 1, .1));
-
+    // new Trigger(m_js1::getTriggerPressed).onTrue(new ZeroGyroscope(m_drivetrainSubsystem));
+    // twoButton.onTrue(new LockWheels(m_drivetrainSubsystem));
+    // threeButton.onTrue(new UnlockWheels(m_drivetrainSubsystem));
+    // fourButton.onTrue(new SmallAdjustmentCommand(m_drivetrainSubsystem, 1, .1));
   }
 
   /**
@@ -79,5 +92,9 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return new SampleAutoCommand(m_drivetrainSubsystem);
+  }
+
+  public double joystickInputFilter(double input){
+    return Math.pow(input, 3);
   }
 }
