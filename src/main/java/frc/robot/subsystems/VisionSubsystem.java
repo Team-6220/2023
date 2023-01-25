@@ -4,8 +4,9 @@ import frc.robot.Constants.VisionConstants;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class VisionSubsystem {
+public class VisionSubsystem extends SubsystemBase{
     private NetworkTable table;
     private NetworkTableEntry ty, tx, tv;
     public VisionSubsystem(){

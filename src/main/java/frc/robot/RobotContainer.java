@@ -21,8 +21,12 @@ import frc.robot.commands.UnlockWheels;
 import frc.robot.commands.ZeroGyroscope;
 //import frc.robot.commands.TimedCommand;
 import frc.robot.commands.AutoClimbCommand;
+import frc.robot.commands.DefaultArmCommand;
+import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
 // import frc.robot.Constants.AutoConstants;
+import frc.robot.subsystems.TelescopeSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -33,14 +37,11 @@ import frc.robot.subsystems.DrivetrainSubsystem;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DrivetrainSubsystem m_drivetrainSubsystem = new DrivetrainSubsystem();
+  private final ArmSubsystem m_armSubsystem = new ArmSubsystem();
+  private final TelescopeSubsystem m_telescopeSubsystem = new TelescopeSubsystem();
+  private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
 
   private final XboxController m_controller = new XboxController(0);
-  //private final CommandXboxController m_Controller2 = new CommandXboxController(1);
-  // private final Joystick m_js1 = new Joystick(1);
-  // //private final Joystick m_js2 = new Joystick(2);
-  // private final Trigger twoButton = new JoystickButton(m_js1, 2);
-  // private final Trigger threeButton = new JoystickButton(m_js1, 3);
-  // private final Trigger fourButton = new JoystickButton(m_js1, 4);
 
 
   /**
@@ -52,16 +53,13 @@ public class RobotContainer {
     // Left stick Y axis -> forward and backwards movement
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
-    // m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(m_drivetrainSubsystem,
-    //         ()->(m_js1.getX() * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND),
-    //         ()->(m_js1.getY() * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND),
-    //         ()->(0 * DrivetrainSubsystem.MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND)
-    // ));
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(m_drivetrainSubsystem,
             ()->(m_controller.getRawAxis(0)),
             ()->(m_controller.getRawAxis(1)*-1),
             ()->(m_controller.getRawAxis(4))
     ));
+
+    m_armSubsystem.setDefaultCommand(new DefaultArmCommand());
 
     // Configure the button bindings
     configureButtonBindings();

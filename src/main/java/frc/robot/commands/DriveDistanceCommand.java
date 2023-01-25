@@ -9,23 +9,24 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 public class DriveDistanceCommand extends CommandBase{
     private final DrivetrainSubsystem m_drivetrainSubsystem;
     private final double goal;
-    private final Translation2d init_t;
+    private final double init_t;
     
 
     public DriveDistanceCommand(DrivetrainSubsystem drivetrainSubsystem, double goal){
         this.m_drivetrainSubsystem = drivetrainSubsystem;
-        this.goal = goal;
-        init_t = m_drivetrainSubsystem.getPose().getTranslation();
+        init_t = m_drivetrainSubsystem.getPose().getTranslation().getX();
+        this.goal = goal +init_t;
+        addRequirements(m_drivetrainSubsystem);
     }
  
     @Override
     public void execute(){
-        m_drivetrainSubsystem.drive(new ChassisSpeeds(0.5,0,0));
+        m_drivetrainSubsystem.drive(ChassisSpeeds.fromFieldRelativeSpeeds(0.5,0,0,m_drivetrainSubsystem.getGyroscopeRotation()));
     }
 
     @Override
     public boolean isFinished(){
-        return !(Math.abs(m_drivetrainSubsystem.getPose().getTranslation().getDistance(init_t))<goal);
+        return !(m_drivetrainSubsystem.getPose().getTranslation().getX() < goal);
     }
 
     @Override

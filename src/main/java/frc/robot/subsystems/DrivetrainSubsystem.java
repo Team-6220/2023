@@ -38,7 +38,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * <p>
    * This can be reduced to cap the robot's maximum speed. Typically, this is useful during initial testing of the robot.
    */
-  public static final double MAX_VOLTAGE = 8.0;
+  public static final double MAX_VOLTAGE = 1.0;
   // Measure the drivetrain's maximum velocity or calculate the theoretical.
   //  The formula for calculating the theoretical maximum velocity is:
   //   <Motor free speed RPM> / 60 * <Drive reduction> * <Wheel diameter meters> * pi
@@ -99,7 +99,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_backLeftDrive = new TalonFX(BACK_LEFT_MODULE_DRIVE_MOTOR);
     m_backRightDrive = new TalonFX(BACK_RIGHT_MODULE_DRIVE_MOTOR);
     m_frontLeftModule = Mk4iSwerveModuleHelper.createFalcon500(
-        tab.getLayout("Froht Left Module", BuiltInLayouts.kList)
+        tab.getLayout("Front Left Module", BuiltInLayouts.kList)
                      .withSize(2, 4)
                      .withPosition(0, 0),
             Mk4iSwerveModuleHelper.GearRatio.L2,
@@ -150,9 +150,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     this.previousStates[1] = new SwerveModuleState(0, new Rotation2d(0));
     this.previousStates[2] = new SwerveModuleState(0, new Rotation2d(0));
     this.previousStates[3] = new SwerveModuleState(0, new Rotation2d(0));
-
     this.previousTime = Timer.getFPGATimestamp();
-    
   }
 
   /**
@@ -164,11 +162,6 @@ public class DrivetrainSubsystem extends SubsystemBase {
   }
 
   public Rotation2d getGyroscopeRotation() {
-//    if (m_navx.isMagnetometerCalibrated()) {
-//      // We will only get valid fused headings if the magnetometer is calibrated
-//      return Rotation2d.fromDegrees(m_navx.getFusedHeading());
-//    }
-
    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
    return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
   }
@@ -177,7 +170,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
     m_chassisSpeeds = chassisSpeeds;
   }
   public double getHeading(){
-          return Math.IEEEremainder(m_navx.getAngle(), 360);
+        return Math.IEEEremainder(m_navx.getAngle(), 360);
   }
   public Pose2d getPose() {
         return odometer.getPoseMeters();
@@ -234,15 +227,16 @@ public class DrivetrainSubsystem extends SubsystemBase {
                 new SwerveModuleState(0, new Rotation2d(Math.toRadians(45))),
                 new SwerveModuleState(0, new Rotation2d(Math.toRadians(-45))),
                 new SwerveModuleState(0, new Rotation2d(Math.toRadians(-45))),
-                new SwerveModuleState(0, new Rotation2d(Math.toRadians(45)))
+                new SwerveModuleState(0, new Rotation2d(Math.toRadians(45)))   
         };
         states = temp;
     }
     SwerveDriveKinematics.desaturateWheelSpeeds(states, Constants.k_PHYSICAL_MAX_SPEED_METERS_PER_SECOND);
-        m_frontLeftModule.set(states[0].speedMetersPerSecond / Constants.k_PHYSICAL_MAX_SPEED_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
-        m_frontRightModule.set(states[1].speedMetersPerSecond / Constants.k_PHYSICAL_MAX_SPEED_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
-        m_backLeftModule.set(states[2].speedMetersPerSecond / Constants.k_PHYSICAL_MAX_SPEED_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
-        m_backRightModule.set(states[3].speedMetersPerSecond / Constants.k_PHYSICAL_MAX_SPEED_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
+    setModuleStates(states);
+        // m_frontLeftModule.set(states[0].speedMetersPerSecond / Constants.k_PHYSICAL_MAX_SPEED_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
+        // m_frontRightModule.set(states[1].speedMetersPerSecond / Constants.k_PHYSICAL_MAX_SPEED_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
+        // m_backLeftModule.set(states[2].speedMetersPerSecond / Constants.k_PHYSICAL_MAX_SPEED_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
+        // m_backRightModule.set(states[3].speedMetersPerSecond / Constants.k_PHYSICAL_MAX_SPEED_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
     updatePositions(states);
     odometer.update(getRotation2d(), this.positions);
   }

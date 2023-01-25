@@ -55,8 +55,7 @@ public class DefaultDriveCommand extends CommandBase {
         // rotation = turningLimiter.calculate(rotation) * Constants.k_PHYSICAL_MAX_ANGULAR_SPEED_RAD_PER_SECOND *.25;
         xTranslation *= Constants.k_PHYSICAL_MAX_SPEED_METERS_PER_SECOND;
         yTranslation *= Constants.k_PHYSICAL_MAX_SPEED_METERS_PER_SECOND;
-        rotation *= Constants.k_PHYSICAL_MAX_ANGULAR_SPEED_RAD_PER_SECOND;
-
+        rotation *= Constants.k_PHYSICAL_MAX_ANGULAR_SPEED_RAD_PER_SECOND*.25;
 
         m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
