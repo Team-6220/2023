@@ -1,19 +1,19 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
 
 public class LockWheels extends CommandBase{
-    private final DrivetrainSubsystem m_DrivetrainSubsystem;
+    private final SwerveSubsystem m_SwerveSubsystem;
 
-    public LockWheels(DrivetrainSubsystem drivetrainSubsystem){
-        this.m_DrivetrainSubsystem = drivetrainSubsystem;
-        addRequirements(drivetrainSubsystem);
+    public LockWheels(SwerveSubsystem swerveSubsystem){
+        this.m_SwerveSubsystem = swerveSubsystem;
+        addRequirements(swerveSubsystem);
     }
 
     @Override
     public void initialize(){
-        this.m_DrivetrainSubsystem.lockWheels();
+        this.m_SwerveSubsystem.toggleLock();
     }
     @Override
     public void end(boolean interrupted){
