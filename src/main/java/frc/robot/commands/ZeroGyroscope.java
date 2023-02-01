@@ -1,17 +1,17 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
 
 public class ZeroGyroscope extends CommandBase{
-    private final DrivetrainSubsystem m_DrivetrainSubsystem;
-    public ZeroGyroscope(DrivetrainSubsystem DrivetrainSubsystem){
-        this.m_DrivetrainSubsystem = DrivetrainSubsystem;
-        addRequirements(DrivetrainSubsystem);
+    private final SwerveSubsystem m_swerveSubsystem;
+    public ZeroGyroscope(SwerveSubsystem SwerveSubsystem){
+        this.m_swerveSubsystem = SwerveSubsystem;
+        addRequirements(SwerveSubsystem);
     }
     @Override
     public void initialize(){
-        this.m_DrivetrainSubsystem.zeroGyroscope();
+        this.m_swerveSubsystem.zeroHeading();
     }
     @Override
     public void execute(){
