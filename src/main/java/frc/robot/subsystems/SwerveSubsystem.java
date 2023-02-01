@@ -4,20 +4,22 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SPI;
 // import edu.wpi.first.wpilibj.geometry.Pose2d;
 // import edu.wpi.first.wpilibj.geometry.Rotation2d;
-// import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 // import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 // import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.*;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
 public class SwerveSubsystem extends SubsystemBase {
+    private boolean lock = false;
+
     private final SwerveModule frontLeft = new SwerveModule(
             DriveConstants.kFrontLeftDriveMotorPort,
             DriveConstants.kFrontLeftTurningMotorPort,
@@ -52,6 +54,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
 
+    private SwerveModuleState[] prev = new SwerveModuleState[4];
 
     private SwerveModulePosition[] positions = {
         new SwerveModulePosition(frontLeft.getDrivePosition(), new Rotation2d(frontLeft.getState().angle.getRadians())),
@@ -71,7 +74,6 @@ public class SwerveSubsystem extends SubsystemBase {
             } catch (Exception e) {
             }
         }).start();
-
     }
 
     public void zeroHeading() {
@@ -145,5 +147,32 @@ public class SwerveSubsystem extends SubsystemBase {
         this.positions[1] = new SwerveModulePosition(frontRight.getDrivePosition(), new Rotation2d(frontRight.getState().angle.getRadians()));
         this.positions[2] = new SwerveModulePosition(backLeft.getDrivePosition(), new Rotation2d(backLeft.getState().angle.getRadians()));
         this.positions[3] = new SwerveModulePosition(backRight.getDrivePosition(), new Rotation2d(backRight.getState().angle.getRadians()));
+    }
+
+    public void drive(ChassisSpeeds cs){
+        setModuleStates(DriveConstants.kDriveKinematics.toSwerveModuleStates(cs));
+    }
+
+    public void toggleLock(){
+        lock = !lock;
+        if(!lock){
+            setModuleStates(prev);
+        }else{
+            prevLock();
+            SwerveModuleState[] temp = {
+                    new SwerveModuleState(0, new Rotation2d(Math.toRadians(45))),
+                    new SwerveModuleState(0, new Rotation2d(Math.toRadians(-45))),
+                    new SwerveModuleState(0, new Rotation2d(Math.toRadians(-45))),
+                    new SwerveModuleState(0, new Rotation2d(Math.toRadians(45)))   
+            };
+            setModuleStates(temp);
+        }
+    }
+
+    public void prevLock(){
+         prev[0] = new SwerveModuleState(frontLeft.getDriveVelocity(), new Rotation2d(frontLeft.getAbsoluteEncoderRad()));
+         prev[1] = new SwerveModuleState(frontRight.getDriveVelocity(), new Rotation2d(frontRight.getAbsoluteEncoderRad()));
+         prev[2] = new SwerveModuleState(backLeft.getDriveVelocity(), new Rotation2d(backLeft.getAbsoluteEncoderRad()));
+         prev[3] = new SwerveModuleState(backRight.getDriveVelocity(), new Rotation2d(backRight.getAbsoluteEncoderRad()));
     }
 }
