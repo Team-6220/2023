@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -33,13 +34,23 @@ public class SwerveJoystickCmd extends CommandBase {
 
     @Override
     public void initialize() {
-        //swerveSubsystem.unInitializeWheels();
-        swerveSubsystem.initializeWheels();
+        swerveSubsystem.unInitializeWheels();
+        //swerveSubsystem.initializeWheels();
     }
 
     @Override
     public void execute() {
-        // 1. Get real-time joystick inputs
+        // if(!swerveSubsystem.wheelsInitialized()){
+        //     SwerveModuleState[] moduleStates = {
+        //         new SwerveModuleState(0,new Rotation2d(0)),
+        //         new SwerveModuleState(0,new Rotation2d(0)),
+        //         new SwerveModuleState(0,new Rotation2d(0)),
+        //         new SwerveModuleState(0,new Rotation2d(0))
+        //     };
+        //     swerveSubsystem.setModuleStates(moduleStates);
+        // }
+        // else{
+            // 1. Get real-time joystick inputs
         double xSpeed = xSpdFunction.get();
         double ySpeed = ySpdFunction.get();
         double turningSpeed = turningSpdFunction.get();
@@ -72,6 +83,7 @@ public class SwerveJoystickCmd extends CommandBase {
         // 6. Output each module states to wheels
         swerveSubsystem.setModuleStates(moduleStates);
         System.out.println("set module states in cmd" + moduleStates[0].angle.getDegrees());
+        //}
     }
         
 
