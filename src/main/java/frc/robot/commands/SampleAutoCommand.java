@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
-import frc.robot.Constants;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.Constants.*;
+import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.List;
 
@@ -19,12 +19,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 public class SampleAutoCommand extends SequentialCommandGroup {
-    public SampleAutoCommand(DrivetrainSubsystem m_drivetrainSubsystem){
+    public SampleAutoCommand(SwerveSubsystem m_drivetrainSubsystem){
         TrajectoryConfig config =
             new TrajectoryConfig(
-                    Constants.AutoConstants.k_MAX_SPEED_METERS_PER_SECOND,
-                    Constants.AutoConstants.k_MAX_ACCELERATION_METERS_PER_SECOND_SQ)
-                .setKinematics(Constants.k_DRIVE_KINEMATICS);
+                    AutoConstants.kMaxSpeedMetersPerSecond,
+                    AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+                .setKinematics(DriveConstants.kDriveKinematics);
 
         // An example trajectory to follow.  All units in meters.
         Trajectory exampleTrajectory =
@@ -43,12 +43,12 @@ public class SampleAutoCommand extends SequentialCommandGroup {
 
         var thetaController =
             new ProfiledPIDController(
-                Constants.AutoConstants.k_PTHETA_CONTROLLER, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
+                AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         HolonomicDriveController hController = new HolonomicDriveController(
-            new PIDController(Constants.AutoConstants.k_PX_CONTROLLER, 0, 0),
-            new PIDController(Constants.AutoConstants.k_PY_CONTROLLER, 0, 0),
+            new PIDController(AutoConstants.kPXController, 0, 0),
+            new PIDController(AutoConstants.kPYController, 0, 0),
             thetaController
             );
 
@@ -56,7 +56,7 @@ public class SampleAutoCommand extends SequentialCommandGroup {
             new SwerveControllerCommand(
                 exampleTrajectory,
                 m_drivetrainSubsystem::getPose,
-                Constants.k_DRIVE_KINEMATICS,
+                DriveConstants.kDriveKinematics,
                 hController,
                 m_drivetrainSubsystem::setModuleStates,
                 m_drivetrainSubsystem);

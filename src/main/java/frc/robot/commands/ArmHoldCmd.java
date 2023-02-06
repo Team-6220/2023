@@ -6,6 +6,6 @@ import frc.robot.subsystems.ArmSubsystem;
 public class ArmHoldCmd extends CommandBase{
     private ArmSubsystem armSubsystem;
     public ArmHoldCmd(ArmSubsystem armSubsystem){
-        
+        addRequirements(armSubsystem);
     }
 }

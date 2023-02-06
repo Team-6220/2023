@@ -4,17 +4,18 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.DrivetrainSubsystem;
+import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.SwerveSubsystem;
 
 
 public class SmallAdjustmentCommand extends CommandBase{
-    private final DrivetrainSubsystem m_drivetrainSubsystem;
+    private final SwerveSubsystem m_drivetrainSubsystem;
     private final double m_SmallAdjustment;
     private final PIDController m_pid;
     private final double m_deadzone;
     private final Pose2d m_initPose;
 
-    public SmallAdjustmentCommand(DrivetrainSubsystem drivetrainSubsystem, double smallAdjustment, double deadzone){
+    public SmallAdjustmentCommand(SwerveSubsystem drivetrainSubsystem, double smallAdjustment, double deadzone){
         this.m_drivetrainSubsystem = drivetrainSubsystem;
         this.m_SmallAdjustment = smallAdjustment;
         this.m_pid = new PIDController(0.5, 0, 0);
@@ -26,19 +27,26 @@ public class SmallAdjustmentCommand extends CommandBase{
     @Override
     public void execute(){
         double result = m_pid.calculate(m_drivetrainSubsystem.getPose().getX() - m_initPose.getX(), this.m_SmallAdjustment);
-        m_drivetrainSubsystem.drive(
-            ChassisSpeeds.fromFieldRelativeSpeeds(
-                result,
-                0d,
-                0d,
-                m_drivetrainSubsystem.getGyroscopeRotation())
+        m_drivetrainSubsystem.setModuleStates(
+            DriveConstants.kDriveKinematics.toSwerveModuleStates(
+                ChassisSpeeds.fromFieldRelativeSpeeds(
+                    result,
+                    0d,
+                    0d,
+                    m_drivetrainSubsystem.getRotation2d()
+                )
+            )
         );
     }
     
 
     @Override
     public void end(boolean interrupted){
-        m_drivetrainSubsystem.drive(new ChassisSpeeds(0.0, 0.0, 0.0));
+        m_drivetrainSubsystem.setModuleStates(
+            DriveConstants.kDriveKinematics.toSwerveModuleStates(
+                new ChassisSpeeds(0.0, 0.0, 0.0)
+            )
+        );
     }
 
     @Override
