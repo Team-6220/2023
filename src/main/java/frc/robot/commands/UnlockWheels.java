@@ -13,7 +13,7 @@ public class UnlockWheels extends CommandBase{
 
     @Override
     public void initialize(){
-        this.m_DrivetrainSubsystem.unlockWheels();
+        this.m_DrivetrainSubsystem.toggleLock();
     }
     @Override
     public void end(boolean interrupted){

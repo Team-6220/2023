@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
 public class SwerveSubsystem extends SubsystemBase {
+    private boolean lock = false;
     private final SwerveModule frontLeft = new SwerveModule(
             DriveConstants.kFrontLeftDriveMotorPort,
             DriveConstants.kFrontLeftTurningMotorPort,
@@ -51,6 +52,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
 
+    private SwerveModuleState[] prev = new SwerveModuleState[4];
 
     private SwerveModulePosition[] positions = {
         new SwerveModulePosition(frontLeft.getDrivePosition(), new Rotation2d(frontLeft.getState().angle.getRadians())),
@@ -158,5 +160,27 @@ public class SwerveSubsystem extends SubsystemBase {
         this.positions[1] = new SwerveModulePosition(frontRight.getDrivePosition(), new Rotation2d(frontRight.getState().angle.getRadians()));
         this.positions[2] = new SwerveModulePosition(backLeft.getDrivePosition(), new Rotation2d(backLeft.getState().angle.getRadians()));
         this.positions[3] = new SwerveModulePosition(backRight.getDrivePosition(), new Rotation2d(backRight.getState().angle.getRadians()));
+    }
+    public void toggleLock(){
+        lock = !lock;
+        if(!lock){
+            setModuleStates(prev);
+        }else{
+            prevLock();
+            SwerveModuleState[] temp = {
+                    new SwerveModuleState(0, new Rotation2d(Math.toRadians(45))),
+                    new SwerveModuleState(0, new Rotation2d(Math.toRadians(-45))),
+                    new SwerveModuleState(0, new Rotation2d(Math.toRadians(-45))),
+                    new SwerveModuleState(0, new Rotation2d(Math.toRadians(45)))   
+            };
+            setModuleStates(temp);
+        }
+    }
+
+    public void prevLock(){
+         prev[0] = new SwerveModuleState(frontLeft.getDriveVelocity(), new Rotation2d(Math.toDegrees(frontLeft.getAbsoluteEncoderDeg())));
+         prev[1] = new SwerveModuleState(frontRight.getDriveVelocity(), new Rotation2d(Math.toDegrees(frontRight.getAbsoluteEncoderDeg())));
+         prev[2] = new SwerveModuleState(backLeft.getDriveVelocity(), new Rotation2d(Math.toDegrees(backLeft.getAbsoluteEncoderDeg())));
+         prev[3] = new SwerveModuleState(backRight.getDriveVelocity(), new Rotation2d(Math.toDegrees(backRight.getAbsoluteEncoderDeg())));
     }
 }
