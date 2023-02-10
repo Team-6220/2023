@@ -7,6 +7,10 @@ import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
@@ -23,6 +27,8 @@ public class SwerveModule {
     private double absoluteEncoderOffsetDeg;
 
     public boolean initialized;
+
+    private GenericEntry desiredState, init, actualState, absEncOffset, absAngle;
 
     public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
             int absoluteEncoderId, double absoluteEncoderOffset) {
@@ -43,6 +49,12 @@ public class SwerveModule {
 
         initPidController = new PIDController(ModuleConstants.kPTurning, 0.0002, 0);
         resetEncoders();
+        SwerveModuleState state = new SwerveModuleState();
+        this.absEncOffset = Shuffleboard.getTab("Drivetrain").add(""+ absoluteEncoder.getDeviceID() + " offset", this.absoluteEncoderOffsetDeg).getEntry();
+        this.actualState = Shuffleboard.getTab("Drivetrain").add("Swerve[" + absoluteEncoder.getDeviceID() + "] actual state", getState().toString()).getEntry();
+        this.desiredState = Shuffleboard.getTab("Drivetrain").add("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString()).getEntry();
+        this.init = Shuffleboard.getTab("Drivetrain").add("" + absoluteEncoder.getDeviceID() +" initialized",initialized).getEntry();
+        this.absAngle = Shuffleboard.getTab("Drivetrain").add(""+ absoluteEncoder.getDeviceID() + " angle", this.absoluteEncoder.getAbsolutePosition()).getEntry();
     }
 
     public double getDrivePosition() {
@@ -92,26 +104,26 @@ public class SwerveModule {
         //     this.initialized = true;
         // }
         // if(this.initialized){
-            if (Math.abs(state.speedMetersPerSecond) < 0.001) {
-                stop();
-                return;
-            }
-            state = SwerveModuleState.optimize(state, getState().angle);
-            driveMotor.set(ControlMode.PercentOutput, state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-            turningMotor.set(ControlMode.PercentOutput, turningPidController.calculate(getState().angle.getDegrees(), state.angle.getDegrees()));
+        if (Math.abs(state.speedMetersPerSecond) < 0.001) {
+            stop();
+            return;
+        }
+        state = SwerveModuleState.optimize(state, getState().angle);
+        driveMotor.set(ControlMode.PercentOutput, state.speedMetersPerSecond / DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        turningMotor.set(ControlMode.PercentOutput, turningPidController.calculate(getState().angle.getDegrees(), state.angle.getDegrees()));
         // }else{
         //     turningMotor.set(ControlMode.PercentOutput, initPidController.calculate(getState().angle.getDegrees(), state.angle.getDegrees()));
         // }
-        SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString());
+        this.desiredState.setString(state.toString());
         
         
     }
 
     public void outputStates(){
-        SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] actual state", getState().toString());
-        SmartDashboard.putNumber("Swerve[" + absoluteEncoder.getDeviceID() + "] absEncoder angle", getAbsoluteEncoderDeg());
-        SmartDashboard.putNumber(""+ absoluteEncoder.getDeviceID() + " offset", absoluteEncoderOffsetDeg);
-        SmartDashboard.putBoolean("" + absoluteEncoder.getDeviceID() +" initialized",initialized);
+        this.actualState.setString(getState().toString());
+        this.init.setBoolean(this.initialized);
+        this.absEncOffset.setDouble(this.absoluteEncoderOffsetDeg);
+        this.absAngle.setDouble(getAbsoluteEncoderDeg());
     }
     public void stop() {
         driveMotor.set(ControlMode.PercentOutput, 0);
