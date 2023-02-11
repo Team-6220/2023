@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
@@ -24,11 +25,13 @@ public class ArmSubsystem extends SubsystemBase{
         armDriveLeader = new CANSparkMax(ArmConstants.k_ARM_DRIVE_LEADER_ID, MotorType.kBrushless);
         armDriveLeader.restoreFactoryDefaults();
         armDriveLeader.setInverted(ArmConstants.k_MOTORS_REVERSED);
+        armDriveLeader.setIdleMode(IdleMode.kBrake);
 
         armDriveFollower  = new CANSparkMax(ArmConstants.k_ARM_DRIVE_FOLLOW_ID, MotorType.kBrushless);
         armDriveFollower.restoreFactoryDefaults();
         armDriveFollower.follow(armDriveLeader);
         armDriveFollower.setInverted(ArmConstants.k_MOTORS_REVERSED);
+        armDriveFollower.setIdleMode(IdleMode.kBrake);
 
         armPidController = armDriveLeader.getPIDController();
         armPidController.setP(.005);
@@ -37,13 +40,13 @@ public class ArmSubsystem extends SubsystemBase{
         armPidController.setFF(0);
         armPidController.setIZone(0);
 
-        armEncoder = armDriveLeader.getEncoder(Type.kHallSensor, 42);
+        armEncoder = armDriveLeader.getEncoder(Type.kQuadrature, 4096);
 
         armDriveFollower.burnFlash();
         armDriveLeader.burnFlash();
         
         armTab = Shuffleboard.getTab("Arm");
-        armAngle = Shuffleboard.getTab("Arm").add("Arm Angle: ", armEncoder.getPosition()).getEntry();
+        armAngle = Shuffleboard.getTab("Arm").add("Arm Angle", armEncoder.getPosition()).getEntry();
     }
 
     public void setMotors(double input){

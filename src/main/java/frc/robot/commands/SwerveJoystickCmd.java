@@ -82,7 +82,7 @@ public class SwerveJoystickCmd extends CommandBase {
 
         // 6. Output each module states to wheels
         swerveSubsystem.setModuleStates(moduleStates);
-        System.out.println("set module states in cmd" + moduleStates[0].angle.getDegrees());
+        //System.out.println("set module states in cmd" + moduleStates[0].angle.getDegrees());
         //}
     }
         
