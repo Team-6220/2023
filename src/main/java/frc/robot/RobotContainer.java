@@ -20,20 +20,24 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ArmHoldCmd;
 import frc.robot.commands.ArmJoystickCmd;
 import frc.robot.commands.CalibrateWheelsCmd;
 import frc.robot.commands.SwerveJoystickCmd;
+import frc.robot.commands.TelescopeJoystickCmd;
 import frc.robot.commands.ZeroGyroscope;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.TelescopeSubsystem;
 
 public class RobotContainer {
 
     private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
     private final ArmSubsystem armSubsystem = new ArmSubsystem();
-
+     private final TelescopeSubsystem telescopeSubsystem = new TelescopeSubsystem();
     private final XboxController m_controller = new XboxController(0);
     private final Joystick m_js = new Joystick(1);
+    private final Joystick m_js2 = new Joystick(2);
 
     public RobotContainer() {
         swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
@@ -41,10 +45,15 @@ public class RobotContainer {
                 () -> -m_controller.getRawAxis(OIConstants.kDriverYAxis),
                 () -> m_controller.getRawAxis(OIConstants.kDriverXAxis),
                 () -> m_controller.getRawAxis(OIConstants.kDriverRotAxis),
-                () -> !m_controller.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)));
+                () -> !m_controller.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)
+        ));
         armSubsystem.setDefaultCommand(new ArmJoystickCmd(
                 armSubsystem,
-                () -> m_js.getY()
+                () -> (-m_js.getY()*.25)
+        ));
+        telescopeSubsystem.setDefaultCommand(new TelescopeJoystickCmd(
+                telescopeSubsystem,
+                () -> -m_js2.getY()
         ));
         configureButtonBindings();
     }
@@ -52,6 +61,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         new Trigger(m_controller::getBackButtonPressed).onTrue(new ZeroGyroscope(swerveSubsystem));
         new Trigger(m_controller::getStartButtonPressed).onTrue(new CalibrateWheelsCmd(swerveSubsystem));
+        new Trigger(() -> m_js.getRawButtonPressed(4)).onTrue(new ArmHoldCmd(armSubsystem, telescopeSubsystem));
     }
 
     public Command getAutonomousCommand() {

@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.ArmSubsystem;
 
@@ -24,7 +25,7 @@ public class ArmJoystickCmd extends CommandBase{
     public void execute(){
         double speed = this.m_jsInput.get();
         speed = Math.abs(speed) > OIConstants.kDeadband ? speed : 0.0;
-        this.m_ArmSubsystem.setMotors(speed);
+        this.m_ArmSubsystem.setMotors(speed, ArmConstants.ControlType.k_PERCENT);
     }
 
     @Override

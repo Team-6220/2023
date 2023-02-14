@@ -3,7 +3,6 @@ package frc.robot.commands;
 import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.TelescopeSubsystem;
 
 public class TelescopeJoystickCmd extends CommandBase{
@@ -16,14 +15,11 @@ public class TelescopeJoystickCmd extends CommandBase{
     }
     @Override
     public void initialize() {
-        // TODO Auto-generated method stub
-        super.initialize();
     }
 
     @Override
     public void execute(){
         double x = jsInput.get();
-        x = (x>OIConstants.kDeadband)?x:0;
         telescopeSubsystem.setMotors(x);
     }
 

@@ -103,50 +103,42 @@ public final class Constants {
 
     public static final class ArmConstants{
         //FIXME set cone high goal angle
-        public static final double k_CONE_HIGH_GOAL_ANGLE_RADIANS = 0;
+        public static final double k_CONE_HIGH_GOAL_ANGLE_DEGREES = 0;
         //FIXME set cone mid goal angle
-        public static final double k_CONE_MID_GOAL_ANGLE_RADIANS = 0;
+        public static final double k_CONE_MID_GOAL_ANGLE_DEGREES = 0;
         //FIXME set cone low goal angle
-        public static final double k_CONE_LOW_GOAL_ANGLE_RADIANS = 0;
-        //FIXME set cone ground pickup angle radians
-        public static final double k_CONE_GROUND_UPRIGHT_PICKUP_ANGLE_RADIANS = 0;
-        //FIXME set cone fallen over ground pickup angle radians
-        public static final double k_CONE_GROUND_DOWN_PICKUP_ANGLE_RADIANS = 0;
+        public static final double k_CONE_LOW_GOAL_ANGLE_DEGREES = 0;
+        //FIXME set cone ground pickup angle DEGREES
+        public static final double k_CONE_GROUND_UPRIGHT_PICKUP_ANGLE_DEGREES = 0;
+        //FIXME set cone fallen over ground pickup angle DEGREES
+        public static final double k_CONE_GROUND_DOWN_PICKUP_ANGLE_DEGREES = 0;
         //FIXME set cone substation pickup angle
-        public static final double k_CONE_SUBSTATION_PICKUP_ANGLE_RADIANS = 0;
+        public static final double k_CONE_SUBSTATION_PICKUP_ANGLE_DEGREES = 0;
         //FIXME set cube high goal angle
-        public static final double k_CUBE_HIGH_GOAL_ANGLE_RADIANS = 0;
+        public static final double k_CUBE_HIGH_GOAL_ANGLE_DEGREES = 0;
         //FIXME set cube mid goal angle
-        public static final double k_CUBE_MID_GOAL_ANGLE_RADIANS = 0;
+        public static final double k_CUBE_MID_GOAL_ANGLE_DEGREES = 0;
         //FIXME set cube low goal angle
-        public static final double k_CUBE_LOW_GOAL_ANGLE_RADIANS = 0;
+        public static final double k_CUBE_LOW_GOAL_ANGLE_DEGREES = 0;
         //FIXME set cube ground pickup angle
-        public static final double k_CUBE_GROUND_UPRIGHT_PICKUP_ANGLE_RADIANS = 0;
+        public static final double k_CUBE_GROUND_UPRIGHT_PICKUP_ANGLE_DEGREES = 0;
         //FIXME set cube substation pickup angle
-        public static final double k_CUBE_SUBSTATION_PICKUP_ANGLE_RADIANS = 0;
-        //FIXME set first neo can ID
+        public static final double k_CUBE_SUBSTATION_PICKUP_ANGLE_DEGREES = 0;
         public static final int k_ARM_DRIVE_LEADER_ID = 1;
-        //FIXME set second neo can ID
         public static final int k_ARM_DRIVE_FOLLOW_ID = 2;
-        //FIXME set position conversion factor
-        public static final double k_ARM_ENCODER_POSITION_CONVERSION_FACTOR = 1/2048;
-        public static final double k_ARM_ENCODER_VELOCITY_CONVERSION_FACTOR = k_ARM_ENCODER_POSITION_CONVERSION_FACTOR/60;
+        public static final double k_ARM_ENCODER_PCF = 5040/360;//encoder pulses to degrees
         //FIXME set reversed
         public static final boolean k_MOTORS_REVERSED = false;
-        //FIXME set PID constants
-        public static final double k_P = .1;
-        public static final double k_I = 1e-4;
-        public static final double k_D = 1;
-        public static final double k_Iz = 0;
-        public static final double k_FF = 0;
-        public static final double k_MAX_OUT = 1;
-        public static final double k_MIN_OUT = -1;
+        public class ControlType{
+            public static final int k_PERCENT = 0;
+            public static final int k_POSITION = 1;
+        } 
 
     }
 
     public static final class TelescopeConstants{
-        public static final int k_TELESCOPE_DRIVE_LEADER_ID = 0;
-        public static final int k_TELESCOPE_DRIVE_FOLLOW_ID = 0;
+        public static final int k_TELESCOPE_DRIVE_LEADER_ID = 8;
+        public static final int k_TELESCOPE_DRIVE_FOLLOW_ID = 9;
         public static final boolean k_MOTORS_REVERSED = false;
         //FIXME
         public static final double k_FULL_EXTENSION = 0;
@@ -159,7 +151,7 @@ public final class Constants {
     }
 
     public static final class VisionConstants{
-        //FIXME set limelight angle radians
+        //FIXME set limelight angle DEGREES
         public static final double k_LIMELIGHT_ANGLE_RADIANS = 0;
         //FIXME set limelight height from ground inches
         public static final double k_LIMELIGHT_HEIGHT_INCHES = 0;

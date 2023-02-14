@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 public class SampleAutoCommand extends SequentialCommandGroup {
     public SampleAutoCommand(SwerveSubsystem m_drivetrainSubsystem){
+        addRequirements(m_drivetrainSubsystem);
         TrajectoryConfig config =
             new TrajectoryConfig(
                     AutoConstants.kMaxSpeedMetersPerSecond,
