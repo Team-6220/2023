@@ -8,10 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
@@ -21,7 +18,6 @@ public class SwerveModule {
     private final TalonFX turningMotor;
 
     private final PIDController turningPidController;
-    private final PIDController initPidController;
 
     private final CANCoder absoluteEncoder;
     private double absoluteEncoderOffsetDeg;
@@ -46,8 +42,7 @@ public class SwerveModule {
 
         turningPidController = new PIDController(ModuleConstants.kPTurning, ModuleConstants.kITurning, 0);
         turningPidController.enableContinuousInput(-180, 180);
-
-        initPidController = new PIDController(ModuleConstants.kPTurning, 0.0002, 0);
+        
         resetEncoders();
         SwerveModuleState state = new SwerveModuleState();
         this.absEncOffset = Shuffleboard.getTab("Drivetrain").add(""+ absoluteEncoder.getDeviceID() + " offset", this.absoluteEncoderOffsetDeg).getEntry();

@@ -1,12 +1,8 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.SPI;
-// import edu.wpi.first.math.geometry.Pose2d;
-// import edu.wpi.first.math.geometry.Rotation2d;
-// import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-// import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-// import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -14,9 +10,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.DriveConstants;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+
+import frc.robot.Constants.DriveConstants;
+
 public class SwerveSubsystem extends SubsystemBase {
     private boolean lock = false;
     ShuffleboardTab driveTab = Shuffleboard.getTab("Drivetrain");
@@ -131,13 +129,10 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         odometer.update(getRotation2d(), this.positions);
-        // SmartDashboard.putNumber("Robot Heading", getHeading());
-        // SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
         backLeft.outputStates();
         backRight.outputStates();
         frontLeft.outputStates();
         frontRight.outputStates();
-        //SmartDashboard.putNumber("yurt" , (backLeft.turningSensor()));
     }
 
     public void stopModules() {
