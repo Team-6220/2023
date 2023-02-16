@@ -33,8 +33,8 @@ import frc.robot.subsystems.TelescopeSubsystem;
 public class RobotContainer {
 
     private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-    private final ArmSubsystem armSubsystem = new ArmSubsystem();
-     private final TelescopeSubsystem telescopeSubsystem = new TelescopeSubsystem();
+    private final TelescopeSubsystem telescopeSubsystem = new TelescopeSubsystem();
+    private final ArmSubsystem armSubsystem = new ArmSubsystem(telescopeSubsystem);
     private final XboxController m_controller = new XboxController(0);
     private final Joystick m_js = new Joystick(1);
     private final Joystick m_js2 = new Joystick(2);
@@ -61,7 +61,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         new Trigger(m_controller::getBackButtonPressed).onTrue(new ZeroGyroscope(swerveSubsystem));
         new Trigger(m_controller::getStartButtonPressed).onTrue(new CalibrateWheelsCmd(swerveSubsystem));
-        new Trigger(() -> m_js.getRawButtonPressed(4)).onTrue(new ArmHoldCmd(armSubsystem, telescopeSubsystem));
+        new Trigger(m_js::getTriggerPressed).onTrue(new ArmHoldCmd(armSubsystem));
     }
 
     public Command getAutonomousCommand() {

@@ -141,7 +141,7 @@ public final class Constants {
         public static final int k_TELESCOPE_DRIVE_FOLLOW_ID = 9;
         public static final boolean k_MOTORS_REVERSED = false;
         //FIXME
-        public static final double k_FULL_EXTENSION = 0;
+        public static final double k_FULL_EXTENSION = 8000;
         //FIXME
         public static final double k_FULL_RETRACTION = 0;
         //FIXME

@@ -21,8 +21,9 @@ public class ArmSubsystem extends SubsystemBase{
     private final SparkMaxPIDController armPidController;
     private final RelativeEncoder armEncoder;
     private ShuffleboardTab armTab;
-    private GenericEntry armAngle, pidGains, desiredArmAngle, telescopeReading;
-    public ArmSubsystem(){
+    private GenericEntry armAngle, pidGains, desiredArmAngle;
+    private final TelescopeSubsystem telescopeSubsystem;
+    public ArmSubsystem(TelescopeSubsystem telescopeSubsystem){
         this.armDriveLeader = new CANSparkMax(ArmConstants.k_ARM_DRIVE_LEADER_ID, MotorType.kBrushless);
         this.armDriveLeader.restoreFactoryDefaults();
         this.armDriveLeader.setInverted(ArmConstants.k_MOTORS_REVERSED);
@@ -42,14 +43,15 @@ public class ArmSubsystem extends SubsystemBase{
         this.armPidController.setIZone(0);
 
         this.armEncoder = this.armDriveLeader.getEncoder(Type.kHallSensor, 42);
-        this.armEncoder.setPositionConversionFactor(1/120);
+        this.armEncoder.setPositionConversionFactor(1/42);
 
         this.armDriveFollower.burnFlash();
         this.armDriveLeader.burnFlash();
         
+        this.telescopeSubsystem = telescopeSubsystem;
+
         this.armTab = Shuffleboard.getTab("ATW");
         this.armAngle = Shuffleboard.getTab("ATW").add("Arm Angle", 0).getEntry();
-        this.telescopeReading = Shuffleboard.getTab("ATW").add("telescope reading", 0).getEntry();
     }
 
     public void setMotors(double input, int type){
@@ -62,11 +64,11 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public double getArmPositionDegrees(){
-        return (ArmConstants.k_ARM_ENCODER_PCF * armEncoder.getPosition())+90; 
+        return (armEncoder.getPosition()*3)+90; 
     }
 
     public double getTelescopePosition(){
-        return this.telescopeReading.getDouble(0);
+        return this.telescopeSubsystem.getTelescopePosition();
     } 
 
     public void stop(){

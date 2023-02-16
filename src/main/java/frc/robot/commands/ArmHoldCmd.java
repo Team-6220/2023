@@ -4,13 +4,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.TelescopeConstants;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.TelescopeSubsystem;
 
 public class ArmHoldCmd extends CommandBase{
     private ArmSubsystem armSubsystem;
     private double initAngle;
-    public ArmHoldCmd(ArmSubsystem armSubsystem, TelescopeSubsystem telescopeSubsystem){
+    public ArmHoldCmd(ArmSubsystem armSubsystem){
         this.initAngle = armSubsystem.getArmPositionDegrees();
+        this.armSubsystem = armSubsystem;
         addRequirements(armSubsystem);
     }
     @Override
@@ -20,8 +20,8 @@ public class ArmHoldCmd extends CommandBase{
     @Override
     public void execute() {
        double t = this.armSubsystem.getTelescopePosition();
-       double out = .023 + .077*(t/TelescopeConstants.k_FULL_EXTENSION);
-       if(this.armSubsystem.getArmPositionDegrees()>90.5){
+       double out = .023;
+       if(this.armSubsystem.getArmPositionDegrees()>0){
         out *= -1;
        }else if(this.armSubsystem.getArmPositionDegrees()<=91 && this.armSubsystem.getArmPositionDegrees()>=89){
         out = 0;

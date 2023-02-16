@@ -26,12 +26,14 @@ public class TelescopeSubsystem extends SubsystemBase{
         this.telescopeDriveFollower.follow(telescopeDriveLeader);
         this.telescopeEncoder = new Encoder(TelescopeConstants.k_ENC_PORT_A, TelescopeConstants.k_ENC_PORT_B, TelescopeConstants.k_ENC_REV, EncodingType.k4X);
         this.telescopeTab = Shuffleboard.getTab("ATW");
-        this.telescopeReading = Shuffleboard.getTab("ATW").add("telescope reading", telescopeEncoder.get()).getEntry();
+        this.telescopeReading = Shuffleboard.getTab("ATW").add("telescope reading", 0).getEntry();
+        
     }
-
+    public int getTelescopePosition(){
+        return this.telescopeEncoder.get();
+    }
     public void setMotors(double percent){
         telescopeDriveLeader.set(ControlMode.PercentOutput, percent);
-        this.telescopeReading.setDouble(telescopeEncoder.get());
     }
     @Override
     public void periodic() {
