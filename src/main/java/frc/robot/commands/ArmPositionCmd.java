@@ -28,6 +28,6 @@ public class ArmPositionCmd  extends CommandBase{
     }
     @Override
     public void end(boolean interrupted) {
-        
+        armSubsystem.stop();
     }
 }

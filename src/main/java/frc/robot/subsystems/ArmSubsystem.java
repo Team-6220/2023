@@ -20,7 +20,6 @@ public class ArmSubsystem extends SubsystemBase{
     private final RelativeEncoder armEncoder;
     private GenericEntry armAngle, pidGains, desiredArmAngle, armOutput;
     private final TelescopeSubsystem telescopeSubsystem;
-    private boolean armFlipped;
     public ArmSubsystem(TelescopeSubsystem telescopeSubsystem){
         this.armDriveLeader = new CANSparkMax(ArmConstants.k_ARM_DRIVE_LEADER_ID, MotorType.kBrushless);
         this.armDriveLeader.restoreFactoryDefaults();
@@ -47,22 +46,18 @@ public class ArmSubsystem extends SubsystemBase{
         
         this.telescopeSubsystem = telescopeSubsystem;
 
-        this.armFlipped = false;
-
         this.armAngle = Shuffleboard.getTab("ATW").add("Arm Angle", 0).getEntry();
         this.armOutput = Shuffleboard.getTab("ATW").add("Arm Motor Output", 0).getEntry();
     }
 
     public void setMotors(double input){
         input += getHoldingOutput();
-        input *= (this.armFlipped)?-1:1;
         this.armDriveLeader.set(input);
         armOutput.setDouble(input);
     }
 
     public double getArmPositionDegrees(){
         double angle = (armEncoder.getPosition()*3)+90;
-        angle *= (this.armFlipped)?-1:1;
         return angle; 
     }
 
@@ -72,15 +67,14 @@ public class ArmSubsystem extends SubsystemBase{
 
     public double getHoldingOutput(){
         double out = .023 + (getTelescopePosition()/TelescopeConstants.k_FULL_EXTENSION)*(.1-.023);
-        out *= (this.armFlipped)?-1:1;
+        out *= (getArmPositionDegrees() < 0)?-1:1;
         return out;
     }
-    public void flipArm(){
-        this.armFlipped = !armFlipped;
-    }
+
     public void stop(){
-        armDriveLeader.set(0);
+        setMotors(0);
     }
+
     @Override
     public void periodic() {
         this.armAngle.setDouble(getArmPositionDegrees());
