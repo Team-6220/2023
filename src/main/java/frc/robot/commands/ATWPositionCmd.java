@@ -10,7 +10,7 @@ public class ATWPositionCmd extends ParallelCommandGroup{
         addRequirements(armSubsystem, telescopeSubsystem);
         addCommands(
             new SequentialCommandGroup(new ArmPositionCmd(armSubsystem, positions[0]), new ArmHoldCmd(armSubsystem)),
-            new SequentialCommandGroup(new TelescopePositionCmd(), new TelescopeHoldCmd())
+            new SequentialCommandGroup(new TelescopePositionCmd(telescopeSubsystem, positions[1]), new TelescopeHoldCmd())
         );
     }
 }

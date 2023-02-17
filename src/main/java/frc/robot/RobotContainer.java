@@ -5,12 +5,15 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ATWPositionCmd;
 import frc.robot.commands.ArmHoldCmd;
 import frc.robot.commands.ArmJoystickCmd;
 import frc.robot.commands.CalibrateWheelsCmd;
+import frc.robot.commands.LockWheels;
 import frc.robot.commands.SampleAutoCommand;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.TelescopeJoystickCmd;
+import frc.robot.commands.UnlockWheels;
 import frc.robot.commands.ZeroGyroscope;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -35,7 +38,7 @@ public class RobotContainer {
         ));
         armSubsystem.setDefaultCommand(new ArmJoystickCmd(
                 armSubsystem,
-                () -> (-m_js.getY()*.25)
+                () -> (-m_js.getY()*.5)
         ));
         telescopeSubsystem.setDefaultCommand(new TelescopeJoystickCmd(
                 telescopeSubsystem,
@@ -47,7 +50,11 @@ public class RobotContainer {
     private void configureButtonBindings() {
         new Trigger(m_controller::getBackButtonPressed).onTrue(new ZeroGyroscope(swerveSubsystem));
         new Trigger(m_controller::getStartButtonPressed).onTrue(new CalibrateWheelsCmd(swerveSubsystem));
+        new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheels(swerveSubsystem));
+        new Trigger(m_controller::getBButtonPressed).onTrue(new UnlockWheels(swerveSubsystem));
         new Trigger(m_js::getTriggerPressed).onTrue(new ArmHoldCmd(armSubsystem));
+        //new Trigger(() -> m_js.getRawButtonPressed(4)).onTrue(new ATWPositionCmd(armSubsystem, telescopeSubsystem, null));
+        
     }
 
     public Command getAutonomousCommand() {
