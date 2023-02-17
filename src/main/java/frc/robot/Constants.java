@@ -102,32 +102,18 @@ public final class Constants {
     }
 
     public static final class ArmConstants{
-        //FIXME set cone high goal angle
-        public static final double k_CONE_HIGH_GOAL_ANGLE_DEGREES = 0;
-        //FIXME set cone mid goal angle
-        public static final double k_CONE_MID_GOAL_ANGLE_DEGREES = 0;
-        //FIXME set cone low goal angle
-        public static final double k_CONE_LOW_GOAL_ANGLE_DEGREES = 0;
-        //FIXME set cone ground pickup angle DEGREES
-        public static final double k_CONE_GROUND_UPRIGHT_PICKUP_ANGLE_DEGREES = 0;
-        //FIXME set cone fallen over ground pickup angle DEGREES
-        public static final double k_CONE_GROUND_DOWN_PICKUP_ANGLE_DEGREES = 0;
-        //FIXME set cone substation pickup angle
-        public static final double k_CONE_SUBSTATION_PICKUP_ANGLE_DEGREES = 0;
-        //FIXME set cube high goal angle
-        public static final double k_CUBE_HIGH_GOAL_ANGLE_DEGREES = 0;
-        //FIXME set cube mid goal angle
-        public static final double k_CUBE_MID_GOAL_ANGLE_DEGREES = 0;
-        //FIXME set cube low goal angle
-        public static final double k_CUBE_LOW_GOAL_ANGLE_DEGREES = 0;
-        //FIXME set cube ground pickup angle
-        public static final double k_CUBE_GROUND_UPRIGHT_PICKUP_ANGLE_DEGREES = 0;
-        //FIXME set cube substation pickup angle
-        public static final double k_CUBE_SUBSTATION_PICKUP_ANGLE_DEGREES = 0;
+        public static final double[] k_CONE_GOALS = {0, 0 ,0}; //low, mid , high
+        public static final double[] k_CONE_PICKUPS = {0, 0, 0}; //upright, down, substation
+
+        public static final double[] k_CUBE_GOALS = {0, 0 ,0}; //low, mid, high
+        public static final double[] k_CUBE_PICKUPS = {0, 0}; //ground, substation
+
+        public static final double k_ARM_VERTICAL_DEGREES = 0; //vertical is 0
+
+        public static final double k_ARM_ENCODER_PCF = 5040/360;//encoder pulses to degrees
+
         public static final int k_ARM_DRIVE_LEADER_ID = 1;
         public static final int k_ARM_DRIVE_FOLLOW_ID = 2;
-        public static final double k_ARM_ENCODER_PCF = 5040/360;//encoder pulses to degrees
-        //FIXME set reversed
         public static final boolean k_MOTORS_REVERSED = false;
         public class ControlType{
             public static final int k_PERCENT = 0;
