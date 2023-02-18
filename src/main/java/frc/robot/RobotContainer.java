@@ -7,11 +7,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
+import java.util.HashMap;
+
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import com.pathplanner.lib.commands.FollowPathWithEvents;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ATWPositionCmd;
@@ -54,7 +58,7 @@ public class RobotContainer {
                 telescopeSubsystem,
                 () -> -m_js2.getY()
         ));
-        traj = PathPlanner.loadPath("Path", new PathConstraints(4, 3));
+        traj = PathPlanner.loadPath("New Path", new PathConstraints(4, 3));
         configureButtonBindings();
     }
 
@@ -69,22 +73,24 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return new SequentialCommandGroup(
-        new InstantCommand(() -> {
-          // Reset odometry for the first path you run during auto
-            swerveSubsystem.resetOdometry(traj.getInitialHolonomicPose());
-        }),
-        new PPSwerveControllerCommand(
+        HashMap<String, Command> eventMap = new HashMap<>();
+        eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+        eventMap.put("marker2", new PrintCommand("passed marker 2"));
+
+        return new FollowPathWithEvents(
+            new PPSwerveControllerCommand(
             traj, 
             swerveSubsystem::getPose, // Pose supplier
             DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-            new PIDController(.5, 0, 0), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-            new PIDController(.5, 0, 0), // Y controller (usually the same values as X controller)
-            new PIDController(3, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(0.5, 0.05, 0.2), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(0.05, 0.075, 0.3), // Y controller (usually the same values as X controller)
+            new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
             swerveSubsystem::setModuleStates, // Module states consumer
-            false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-            swerveSubsystem // Requires this drive subsystem
-        )
-    );
+            true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+            swerveSubsystem// Requires this drive subsystem
+            ),
+            traj.getMarkers(),
+            eventMap
+        );
     }
 }

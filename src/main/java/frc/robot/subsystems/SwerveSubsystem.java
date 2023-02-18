@@ -119,7 +119,7 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        return odometer.getPoseMeters();
+        return new Pose2d(odometer.getPoseMeters().getX(), -odometer.getPoseMeters().getY(), odometer.getPoseMeters().getRotation());
     }
 
     public void resetOdometry(Pose2d pose) {
@@ -133,6 +133,10 @@ public class SwerveSubsystem extends SubsystemBase {
         backRight.outputStates();
         frontLeft.outputStates();
         frontRight.outputStates();
+        frontLeft.updatePosition();
+        frontRight.updatePosition();
+        backLeft.updatePosition();
+        backRight.updatePosition();
     }
 
     public void stopModules() {
@@ -148,7 +152,7 @@ public class SwerveSubsystem extends SubsystemBase {
         frontRight.setDesiredState(desiredStates[1]);
         backLeft.setDesiredState(desiredStates[2]);
         backRight.setDesiredState(desiredStates[3]);
-        System.out.println("set module states subsystem: " + desiredStates[0].angle.getDegrees());
+        //System.out.println("set module states subsystem: " + desiredStates[0].angle.getDegrees());
         setModulePositions();
     }
 

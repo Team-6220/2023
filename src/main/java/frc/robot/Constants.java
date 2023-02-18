@@ -15,7 +15,7 @@ public final class Constants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
         public static final double kDriveMotorGearRatio = 1 / 6.75;
         public static final double kTurningMotorGearRatio = 7 / 150;
-        public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
+        public static final double kDriveEncoderRot2Meter = .0472867872007;
         public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 360;
         public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
         public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;

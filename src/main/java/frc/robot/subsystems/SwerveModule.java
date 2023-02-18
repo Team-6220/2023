@@ -24,7 +24,7 @@ public class SwerveModule {
 
     public boolean initialized;
 
-    private GenericEntry desiredState, init, actualState, absEncOffset, absAngle;
+    private GenericEntry desiredState, init, actualState, absEncOffset, absAngle, drivePosition;
 
     public SwerveModule(int driveMotorId, int turningMotorId, boolean driveMotorReversed, boolean turningMotorReversed,
             int absoluteEncoderId, double absoluteEncoderOffset) {
@@ -50,10 +50,12 @@ public class SwerveModule {
         this.desiredState = Shuffleboard.getTab("Drivetrain").add("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString()).getEntry();
         this.init = Shuffleboard.getTab("Drivetrain").add("" + absoluteEncoder.getDeviceID() +" initialized",initialized).getEntry();
         this.absAngle = Shuffleboard.getTab("Drivetrain").add(""+ absoluteEncoder.getDeviceID() + " angle", this.absoluteEncoder.getAbsolutePosition()).getEntry();
+        this.drivePosition = Shuffleboard.getTab("Drivetrain").add("" + absoluteEncoder.getDeviceID() + " drive position meters", 0).getEntry();
     }
 
     public double getDrivePosition() {
-        return driveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter;
+
+        return driveMotor.getSelectedSensorPosition() * ModuleConstants.kDriveEncoderRot2Meter / 2048;
     }
 
     public double getTurningPosition() {    
@@ -80,6 +82,9 @@ public class SwerveModule {
     }
     public void updateOffset(double offset){
         this.absoluteEncoderOffsetDeg = offset;
+    }
+    public void updatePosition(){
+        this.drivePosition.setDouble(getDrivePosition());
     }
     public void resetEncoders() {
         driveMotor.setSelectedSensorPosition(0);
@@ -109,9 +114,7 @@ public class SwerveModule {
         // }else{
         //     turningMotor.set(ControlMode.PercentOutput, initPidController.calculate(getState().angle.getDegrees(), state.angle.getDegrees()));
         // }
-        this.desiredState.setString(state.toString());
-        
-        
+        this.desiredState.setString(state.toString());   
     }
 
     public void outputStates(){
@@ -123,5 +126,5 @@ public class SwerveModule {
     public void stop() {
         driveMotor.set(ControlMode.PercentOutput, 0);
         turningMotor.set(ControlMode.PercentOutput, 0);
-    }
+    } 
 }
