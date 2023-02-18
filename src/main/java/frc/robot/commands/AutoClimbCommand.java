@@ -8,12 +8,11 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class AutoClimbCommand extends SequentialCommandGroup {
     //private double runtime;
 
-    public AutoClimbCommand(SwerveSubsystem drivetrainSubsystem){
-        addRequirements(drivetrainSubsystem);
+    public AutoClimbCommand(SwerveSubsystem swerveSubsystem){
         addCommands(
-            new DriveDistanceCommand(drivetrainSubsystem, 1),
+            new DriveDistanceCommand(swerveSubsystem, 1),
             new WaitCommand(2),
-            new LockWheels(drivetrainSubsystem)
+            new LockWheels(swerveSubsystem)
         );
     }
 }

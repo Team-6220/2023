@@ -7,10 +7,6 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import com.dacubeking.maven.AutoBuilder.robot.reflection.ClassInformationSender;
-import com.dacubeking.AutoBuilder.robot.robotinterface.AutonomousContainer;
-import com.dacubeking.AutoBuilder.robot.robotinterface.CommandTranslator;
-import com.dacubeking.AutoBuilder.robot.serialization.Serializer;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -37,22 +33,6 @@ public class Robot extends TimedRobot {
         // and put our
         // autonomous chooser on the dashboard.
         m_robotContainer = new RobotContainer();
-        AutonomousContainer.getInstance().setDebugPrints(true);
-        AutonomousContainer.getInstance().initialize(
-                true,
-                new CommandTranslator(
-                        drive::setAutoPath,
-                        drive::stopMovement,
-                        drive::setAutoRotation,
-                        drive::isFinished,
-                        drive::getAutoElapsedTime,
-                        robotTracker::resetPosition,
-                        false
-
-                ),
-                false,
-                null
-        );
     }
 
     /**
