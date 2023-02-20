@@ -23,11 +23,12 @@ import frc.robot.commands.ArmHoldCmd;
 import frc.robot.commands.ArmJoystickCmd;
 import frc.robot.commands.CalibrateWheelsCmd;
 import frc.robot.commands.LockWheels;
-import frc.robot.commands.SampleAutoCommand;
 import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.TelescopeJoystickCmd;
 import frc.robot.commands.UnlockWheels;
 import frc.robot.commands.ZeroGyroscope;
+import frc.robot.commands.autos.PathPlannerWEventsCmd;
+import frc.robot.commands.autos.SampleAutoCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TelescopeSubsystem;
@@ -76,21 +77,6 @@ public class RobotContainer {
         HashMap<String, Command> eventMap = new HashMap<>();
         eventMap.put("marker1", new PrintCommand("Passed marker 1"));
         eventMap.put("marker2", new PrintCommand("passed marker 2"));
-
-        return new FollowPathWithEvents(
-            new PPSwerveControllerCommand(
-            traj, 
-            swerveSubsystem::getPose, // Pose supplier
-            DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-            new PIDController(0.5, 0.05, 0.2), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-            new PIDController(0.05, 0.075, 0.3), // Y controller (usually the same values as X controller)
-            new PIDController(0, 0, 0), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-            swerveSubsystem::setModuleStates, // Module states consumer
-            true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-            swerveSubsystem// Requires this drive subsystem
-            ),
-            traj.getMarkers(),
-            eventMap
-        );
+        return new PathPlannerWEventsCmd(swerveSubsystem, traj, eventMap);
     }
 }
