@@ -34,6 +34,9 @@ public class TelescopeSubsystem extends SubsystemBase{
         return this.telescopeEncoder.get();
     }
     public void setMotors(double percent){
+        if(getTelescopePosition() >= TelescopeConstants.k_FULL_EXTENSION && percent > 0){
+            percent = 0;
+        }
         telescopeDriveLeader.set(ControlMode.PercentOutput, percent);
         this.telescopeOutput.setDouble(percent);
     }

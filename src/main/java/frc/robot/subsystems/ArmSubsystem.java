@@ -51,14 +51,15 @@ public class ArmSubsystem extends SubsystemBase{
     }
 
     public void setMotors(double input){
+        input *= .9;
         input += getHoldingOutput();
         this.armDriveLeader.set(input);
         armOutput.setDouble(input);
     }
 
     public double getArmPositionDegrees(){
-        double angle = (armEncoder.getPosition()*3)+90;
-        return angle; 
+        double angle = (armEncoder.getPosition());
+        return angle+90; 
     }
 
     public double getTelescopePosition(){
@@ -67,7 +68,8 @@ public class ArmSubsystem extends SubsystemBase{
 
     public double getHoldingOutput(){
         double out = .023 + (getTelescopePosition()/TelescopeConstants.k_FULL_EXTENSION)*(.1-.023);
-        out *= (getArmPositionDegrees() < 0)?-1:1;
+        out *= Math.sin(Math.toRadians(getArmPositionDegrees()));
+        out *= (getArmPositionDegrees() > 0) ? -1:1; 
         return out;
     }
 
