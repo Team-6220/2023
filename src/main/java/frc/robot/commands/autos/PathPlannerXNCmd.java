@@ -16,7 +16,7 @@ public class PathPlannerXNCmd extends SequentialCommandGroup{
             traj, 
             swerveSubsystem::getPose, // Pose supplier
             DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-            new PIDController(-0.73, 0.075, 0.2), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+            new PIDController(-0.73, -0.075, -0.2), // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
             new PIDController(0, 0.08, 0.28), // Y controller (usually the same values as X controller)
             new PIDController(0, 0, .2), // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
             swerveSubsystem::setModuleStates, // Module states consumer
