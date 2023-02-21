@@ -27,6 +27,7 @@ import frc.robot.commands.SwerveJoystickCmd;
 import frc.robot.commands.TelescopeJoystickCmd;
 import frc.robot.commands.UnlockWheels;
 import frc.robot.commands.ZeroGyroscope;
+import frc.robot.commands.autos.AutoACmd;
 import frc.robot.commands.autos.PathPlannerWEventsCmd;
 import frc.robot.commands.autos.SampleAutoCommand;
 import frc.robot.subsystems.ArmSubsystem;
@@ -74,9 +75,10 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        HashMap<String, Command> eventMap = new HashMap<>();
-        eventMap.put("marker1", new PrintCommand("Passed marker 1"));
-        eventMap.put("marker2", new PrintCommand("passed marker 2"));
-        return new PathPlannerWEventsCmd(swerveSubsystem, traj, eventMap);
+        // HashMap<String, Command> eventMap = new HashMap<>();
+        // eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+        // eventMap.put("marker2", new PrintCommand("passed marker 2"));
+        // return new PathPlannerWEventsCmd(swerveSubsystem, traj, eventMap);
+        return new AutoACmd(swerveSubsystem);
     }
 }
