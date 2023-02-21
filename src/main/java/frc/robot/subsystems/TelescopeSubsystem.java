@@ -16,7 +16,7 @@ public class TelescopeSubsystem extends SubsystemBase{
     private TalonSRX telescopeDriveLeader;
     private VictorSPX telescopeDriveFollower;
     private Encoder telescopeEncoder;
-    private GenericEntry telescopeReading;
+    private GenericEntry telescopeReading, telescopeOutput;
     private ShuffleboardTab telescopeTab;
     public TelescopeSubsystem(){
         this.telescopeDriveLeader = new TalonSRX(TelescopeConstants.k_TELESCOPE_DRIVE_LEADER_ID);
@@ -27,6 +27,7 @@ public class TelescopeSubsystem extends SubsystemBase{
         this.telescopeEncoder = new Encoder(TelescopeConstants.k_ENC_PORT_A, TelescopeConstants.k_ENC_PORT_B, TelescopeConstants.k_ENC_REV, EncodingType.k4X);
         this.telescopeTab = Shuffleboard.getTab("ATW");
         this.telescopeReading = Shuffleboard.getTab("ATW").add("telescope reading", 0).getEntry();
+        this.telescopeOutput = Shuffleboard.getTab("ATW").add("telescope output", 0).getEntry();
         
     }
     public int getTelescopePosition(){
@@ -34,6 +35,11 @@ public class TelescopeSubsystem extends SubsystemBase{
     }
     public void setMotors(double percent){
         telescopeDriveLeader.set(ControlMode.PercentOutput, percent);
+        this.telescopeOutput.setDouble(percent);
+    }
+    public void stopMotors(){
+        telescopeDriveLeader.set(ControlMode.PercentOutput, 0);
+        this.telescopeOutput.setDouble(0);
     }
     @Override
     public void periodic() {

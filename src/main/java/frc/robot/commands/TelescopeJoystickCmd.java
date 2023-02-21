@@ -25,7 +25,7 @@ public class TelescopeJoystickCmd extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
-        telescopeSubsystem.setMotors(0);
+        telescopeSubsystem.stopMotors();
     }
     @Override
     public boolean isFinished() {

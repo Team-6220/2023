@@ -123,6 +123,9 @@ public final class Constants {
     }
 
     public static final class TelescopeConstants{
+        public static final double kP = 0.05;
+        public static final double kI = 0.00;
+        public static final double kD = 0.00;
         public static final int k_TELESCOPE_DRIVE_LEADER_ID = 8;
         public static final int k_TELESCOPE_DRIVE_FOLLOW_ID = 9;
         public static final boolean k_MOTORS_REVERSED = false;
