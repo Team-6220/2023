@@ -19,26 +19,36 @@ public class TelescopeSubsystem extends SubsystemBase{
     private GenericEntry telescopeReading, telescopeOutput;
     private ShuffleboardTab telescopeTab;
     public TelescopeSubsystem(){
+        //init telescope lead (has to be talon)
         this.telescopeDriveLeader = new TalonSRX(TelescopeConstants.k_TELESCOPE_DRIVE_LEADER_ID);
-        this.telescopeDriveFollower = new VictorSPX(TelescopeConstants.k_TELESCOPE_DRIVE_FOLLOW_ID);
         this.telescopeDriveLeader.setInverted(TelescopeConstants.k_MOTORS_REVERSED);
+        //init telescope follow (has to be victor)
+        this.telescopeDriveFollower = new VictorSPX(TelescopeConstants.k_TELESCOPE_DRIVE_FOLLOW_ID);
         this.telescopeDriveFollower.setInverted(TelescopeConstants.k_MOTORS_REVERSED);
         this.telescopeDriveFollower.follow(telescopeDriveLeader);
+        //throughbore encoder (encoding type changes the pulses per revolution (higher = more precision))
         this.telescopeEncoder = new Encoder(TelescopeConstants.k_ENC_PORT_A, TelescopeConstants.k_ENC_PORT_B, TelescopeConstants.k_ENC_REV, EncodingType.k4X);
+        //shuffleboard
         this.telescopeTab = Shuffleboard.getTab("ATW");
         this.telescopeReading = Shuffleboard.getTab("ATW").add("telescope reading", 0).getEntry();
         this.telescopeOutput = Shuffleboard.getTab("ATW").add("telescope output", 0).getEntry();
         
     }
     public int getTelescopePosition(){
+        //update position on shuffleboard
         return this.telescopeEncoder.get();
     }
-    public void setMotors(double percent){
-        if(getTelescopePosition() >= TelescopeConstants.k_FULL_EXTENSION && percent > 0){
-            percent = 0;
+    public void setMotors(double input){
+        if(getTelescopePosition() >= TelescopeConstants.k_FULL_EXTENSION && input > 0){
+            //stop it from extending beyond full
+            input = 0;
         }
-        telescopeDriveLeader.set(ControlMode.PercentOutput, percent);
-        this.telescopeOutput.setDouble(percent);
+        if(getTelescopePosition() <= TelescopeConstants.k_FULL_RETRACTION && input < 0){
+            //stop it from extending beyond full
+            input = 0;
+        }
+        telescopeDriveLeader.set(ControlMode.PercentOutput, input);
+        this.telescopeOutput.setDouble(input);
     }
     public void stopMotors(){
         telescopeDriveLeader.set(ControlMode.PercentOutput, 0);

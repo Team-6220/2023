@@ -119,6 +119,7 @@ public final class Constants {
             public static final int k_PERCENT = 0;
             public static final int k_POSITION = 1;
         } 
+        public static final double k_SOFT_LIMIT = 100;
 
     }
 
