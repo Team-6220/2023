@@ -18,31 +18,32 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ATWJoystickCmd;
 import frc.robot.commands.ATWPositionCmd;
-import frc.robot.commands.ArmHoldCmd;
-import frc.robot.commands.ArmJoystickCmd;
-import frc.robot.commands.CalibrateWheelsCmd;
-import frc.robot.commands.LockWheels;
-import frc.robot.commands.SwerveJoystickCmd;
-import frc.robot.commands.TelescopeJoystickCmd;
-import frc.robot.commands.UnlockWheels;
 import frc.robot.commands.ZeroGyroscope;
 import frc.robot.commands.autos.AutoACmd;
 import frc.robot.commands.autos.PathPlannerWEventsCmd;
 import frc.robot.commands.autos.SampleAutoCommand;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.commands.drive.CalibrateWheelsCmd;
+import frc.robot.commands.drive.LockWheels;
+import frc.robot.commands.drive.SwerveJoystickCmd;
+import frc.robot.commands.drive.UnlockWheels;
+import frc.robot.subsystems.ATWSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.TelescopeSubsystem;
 
 public class RobotContainer {
 
     private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
-    private final TelescopeSubsystem telescopeSubsystem = new TelescopeSubsystem();
-    private final ArmSubsystem armSubsystem = new ArmSubsystem(telescopeSubsystem);
+    private final ATWSubsystem atwSubsystem = new ATWSubsystem();
     private final XboxController m_controller = new XboxController(0);
     private final Joystick m_js = new Joystick(1);
     private final Joystick m_js2 = new Joystick(2);
     private final PathPlannerTrajectory traj;
+    private final double[] position1 = {0, atwSubsystem.getTelescopePosition()};
+    private final double[] position2 = {45, atwSubsystem.getTelescopePosition()};
+    private final double[] position3 = {-45, atwSubsystem.getTelescopePosition()};
+    private final double[] position4 = {90, atwSubsystem.getTelescopePosition()};
+    private final double[] position5 = {-90, atwSubsystem.getTelescopePosition()};
 
     public RobotContainer() {
         swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
@@ -52,13 +53,10 @@ public class RobotContainer {
                 () -> m_controller.getRawAxis(OIConstants.kDriverRotAxis),
                 () -> !m_controller.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)
         ));
-        armSubsystem.setDefaultCommand(new ArmJoystickCmd(
-                armSubsystem,
-                () -> (-m_js.getY()*.5)
-        ));
-        telescopeSubsystem.setDefaultCommand(new TelescopeJoystickCmd(
-                telescopeSubsystem,
-                () -> -m_js2.getY()
+        atwSubsystem.setDefaultCommand(new ATWJoystickCmd(
+                atwSubsystem,
+                () -> (-m_js.getY()*.5),
+                () -> (m_js2.getY() * .5)
         ));
         traj = PathPlanner.loadPath("New Path", new PathConstraints(4, 3));
         configureButtonBindings();
@@ -69,9 +67,11 @@ public class RobotContainer {
         new Trigger(m_controller::getStartButtonPressed).onTrue(new CalibrateWheelsCmd(swerveSubsystem));
         new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheels(swerveSubsystem));
         new Trigger(m_controller::getBButtonPressed).onTrue(new UnlockWheels(swerveSubsystem));
-        new Trigger(m_js::getTriggerPressed).onTrue(new ArmHoldCmd(armSubsystem));
-        //new Trigger(() -> m_js.getRawButtonPressed(4)).onTrue(new ATWPositionCmd(armSubsystem, telescopeSubsystem, null));
-        
+        new Trigger(() -> m_js.getRawButton(2)).onTrue(new ATWPositionCmd(atwSubsystem, position1));
+        new Trigger(() -> m_js.getRawButton(3)).onTrue(new ATWPositionCmd(atwSubsystem, position2));
+        new Trigger(() -> m_js.getRawButton(4)).onTrue(new ATWPositionCmd(atwSubsystem, position3));
+        new Trigger(() -> m_js.getRawButton(5)).onTrue(new ATWPositionCmd(atwSubsystem, position4));
+        new Trigger(() -> m_js.getRawButton(6)).onTrue(new ATWPositionCmd(atwSubsystem, position5));
     }
 
     public Command getAutonomousCommand() {
