@@ -53,13 +53,13 @@ public class ATWSubsystem extends SubsystemBase{
 
         //init telescope lead (has to be talon)
         this.telescopeDriveLeader = new TalonSRX(TelescopeConstants.k_TELESCOPE_DRIVE_LEADER_ID);
-        this.telescopeDriveLeader.setInverted(TelescopeConstants.k_MOTORS_REVERSED);
+        this.telescopeDriveLeader.setInverted(false);
         //init telescope follow (has to be victor)
         this.telescopeDriveFollower = new VictorSPX(TelescopeConstants.k_TELESCOPE_DRIVE_FOLLOW_ID);
-        this.telescopeDriveFollower.setInverted(TelescopeConstants.k_MOTORS_REVERSED);
+        this.telescopeDriveFollower.setInverted(true);
         this.telescopeDriveFollower.follow(telescopeDriveLeader);
         //throughbore encoder (encoding type changes the pulses per revolution (higher = more precision))
-        this.telescopeEncoder = new Encoder(TelescopeConstants.k_ENC_PORT_A, TelescopeConstants.k_ENC_PORT_B, TelescopeConstants.k_ENC_REV, EncodingType.k4X);
+        this.telescopeEncoder = new Encoder(TelescopeConstants.k_ENC_PORT_A, TelescopeConstants.k_ENC_PORT_B, true, EncodingType.k4X);
         
         //shuffleboard
         this.telescopeReading = Shuffleboard.getTab("ATW").add("telescope reading", 0).getEntry();
@@ -69,13 +69,14 @@ public class ATWSubsystem extends SubsystemBase{
     }
     public void setArmMotors(double input){
         //stop it from going too far
-        if(Math.abs(getArmPositionDegrees()) >= ArmConstants.k_SOFT_LIMIT && !((getArmPositionDegrees() < 0) ^ (input < 0))){
-            input = 0;
-        }
+        
         //reduce input because adding the holding value could make it over 1
         input *= .9;
         //get holding output flips itself so we just add this
         input += getArmHoldingOutput();
+        if(Math.abs(getArmPositionDegrees()) >= ArmConstants.k_SOFT_LIMIT && !((getArmPositionDegrees() < 0) ^ (input < 0))){
+            input = 0;
+        }
         //we only set the leader cuz the follower will just do the same
         this.armDriveLeader.set(input);
         //updating the shuffle board output
@@ -83,15 +84,15 @@ public class ATWSubsystem extends SubsystemBase{
     }
 
     public double getArmPositionDegrees(){
-        double angle = (armEncoder.getPosition());
+        double angle = (armEncoder.getPosition() * 3);
         return angle+90; 
     }
 
     public double getArmHoldingOutput(){
         //first formula is just slope-intercept as .023 is the min and .1 is the max and it should increase linearly from there
-        double out = .023 + (getTelescopePosition()/TelescopeConstants.k_FULL_EXTENSION)*(.1-.023);
+        double out = .023 + (getTelescopePosition()/TelescopeConstants.k_FULL_EXTENSION)*(.09-.023);
         //torque exerted by gravity changes with angle, this should account for that
-        out *= Math.sin(Math.toRadians(getArmPositionDegrees()));
+        out *= Math.sin(Math.abs(Math.toRadians(getArmPositionDegrees())));
         out *= (getArmPositionDegrees() > 0)?-1:1; 
         return out;
     }

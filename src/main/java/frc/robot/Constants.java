@@ -114,7 +114,7 @@ public final class Constants {
 
         public static final int k_ARM_DRIVE_LEADER_ID = 1;
         public static final int k_ARM_DRIVE_FOLLOW_ID = 2;
-        public static final boolean k_MOTORS_REVERSED = false;
+        public static final boolean k_MOTORS_REVERSED = true;
         public class ControlType{
             public static final int k_PERCENT = 0;
             public static final int k_POSITION = 1;
