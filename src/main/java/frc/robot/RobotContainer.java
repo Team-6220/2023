@@ -56,7 +56,7 @@ public class RobotContainer {
         atwSubsystem.setDefaultCommand(new ATWJoystickCmd(
                 atwSubsystem,
                 () -> (-m_js.getY()*.5),
-                () -> (m_js2.getY() * .5)
+                () -> (-m_js2.getY()*.5)
         ));
         traj = PathPlanner.loadPath("New Path", new PathConstraints(4, 3));
         configureButtonBindings();

@@ -53,10 +53,10 @@ public class ATWSubsystem extends SubsystemBase{
 
         //init telescope lead (has to be talon)
         this.telescopeDriveLeader = new TalonSRX(TelescopeConstants.k_TELESCOPE_DRIVE_LEADER_ID);
-        this.telescopeDriveLeader.setInverted(false);
+        this.telescopeDriveLeader.setInverted(true);
         //init telescope follow (has to be victor)
         this.telescopeDriveFollower = new VictorSPX(TelescopeConstants.k_TELESCOPE_DRIVE_FOLLOW_ID);
-        this.telescopeDriveFollower.setInverted(true);
+        this.telescopeDriveFollower.setInverted(false);
         this.telescopeDriveFollower.follow(telescopeDriveLeader);
         //throughbore encoder (encoding type changes the pulses per revolution (higher = more precision))
         this.telescopeEncoder = new Encoder(TelescopeConstants.k_ENC_PORT_A, TelescopeConstants.k_ENC_PORT_B, true, EncodingType.k4X);
