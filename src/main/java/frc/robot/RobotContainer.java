@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.Constants.TelescopeConstants;
 import frc.robot.commands.ATWJoystickCmd;
 import frc.robot.commands.ATWPositionCmd;
 import frc.robot.commands.ZeroGyroscope;
@@ -44,6 +45,10 @@ public class RobotContainer {
     private final double[] position3 = {-45, atwSubsystem.getTelescopePosition()};
     private final double[] position4 = {90, atwSubsystem.getTelescopePosition()};
     private final double[] position5 = {-90, atwSubsystem.getTelescopePosition()};
+    private final double[] position6 = {0, 1.5};
+    private final double[] position7 = {90, 1.5};
+    private final double[] position8 = {atwSubsystem.getArmPositionDegrees(), TelescopeConstants.k_FULL_RETRACTION + TelescopeConstants.k_FULL_EXTENSION * .66};
+    private final double[] position9 = {atwSubsystem.getArmPositionDegrees(), TelescopeConstants.k_FULL_RETRACTION + TelescopeConstants.k_FULL_EXTENSION * .9};
 
     public RobotContainer() {
         swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
@@ -67,11 +72,17 @@ public class RobotContainer {
         new Trigger(m_controller::getStartButtonPressed).onTrue(new CalibrateWheelsCmd(swerveSubsystem));
         new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheels(swerveSubsystem));
         new Trigger(m_controller::getBButtonPressed).onTrue(new UnlockWheels(swerveSubsystem));
-        new Trigger(() -> m_js.getRawButton(2)).onTrue(new ATWPositionCmd(atwSubsystem, position1));
-        new Trigger(() -> m_js.getRawButton(3)).onTrue(new ATWPositionCmd(atwSubsystem, position2));
-        new Trigger(() -> m_js.getRawButton(4)).onTrue(new ATWPositionCmd(atwSubsystem, position3));
-        new Trigger(() -> m_js.getRawButton(5)).onTrue(new ATWPositionCmd(atwSubsystem, position4));
-        new Trigger(() -> m_js.getRawButton(6)).onTrue(new ATWPositionCmd(atwSubsystem, position5));
+        new Trigger(() -> m_js.getRawButtonPressed(2)).onTrue(new ATWPositionCmd(atwSubsystem, position1));
+        new Trigger(() -> m_js.getRawButtonPressed(3)).onTrue(new ATWPositionCmd(atwSubsystem, position2));
+        new Trigger(() -> m_js.getRawButtonPressed(4)).onTrue(new ATWPositionCmd(atwSubsystem, position3));
+        new Trigger(() -> m_js.getRawButtonPressed(5)).onTrue(new ATWPositionCmd(atwSubsystem, position4));
+        new Trigger(() -> m_js.getRawButtonPressed(6)).onTrue(new ATWPositionCmd(atwSubsystem, position5));
+        new Trigger(() -> m_js2.getRawButtonPressed(7)).onTrue(new ATWPositionCmd(atwSubsystem, position6));
+        new Trigger(() -> m_js2.getRawButtonPressed(8)).onTrue(new ATWPositionCmd(atwSubsystem, position7));
+        new Trigger(() -> m_js2.getRawButtonPressed(4)).onTrue(new ATWPositionCmd(atwSubsystem, position8));
+        new Trigger(() -> m_js2.getRawButtonPressed(5)).onTrue(new ATWPositionCmd(atwSubsystem, position9));
+        new Trigger(m_js2::getTriggerPressed).onTrue(new ATWJoystickCmd(atwSubsystem,  () -> (-m_js.getY()*.5),
+        () -> (-m_js2.getY()*.5)));
     }
 
     public Command getAutonomousCommand() {

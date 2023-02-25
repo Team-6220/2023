@@ -131,9 +131,9 @@ public final class Constants {
         public static final int k_TELESCOPE_DRIVE_FOLLOW_ID = 9;
         public static final boolean k_MOTORS_REVERSED = false;
         //FIXME
-        public static final double k_FULL_EXTENSION = 8000;
+        public static final double k_FULL_EXTENSION = 4.03;
         //FIXME
-        public static final double k_FULL_RETRACTION = 0;
+        public static final double k_FULL_RETRACTION = -0.66;
         //FIXME
         public static final int k_ENC_PORT_A = 0;
         public static final int k_ENC_PORT_B = 1;
@@ -151,22 +151,19 @@ public final class Constants {
 
     public static final class IntakeConstants{
         //FIXME set solenoid ports
-        public static final int k_LEFT_SOLENOID_PORT = 0;
-        public static final int k_RIGHT_SOLENOID_PORT = 1;
+        public static final int SOLENOID_PORT = 1;
         //FIXME set intake speed
         public static final double k_CUBE_INTAKE_SPEED = 0;
         public static final double k_CONE_INTAKE_SPEED = 0;
-        //FIXME set limit switch input port
-        public static final int k_LIMIT_SWITCH_PORT = 0;
+        public static final int k_INTAKE_MOTOR_ID = 10;
     }
 
     public static final class WristConstants{
         //FIXME set wrist motor id
-        public static final int k_WRIST_MOTOR_ID = 0;
+        public static final int k_WRIST_MOTOR_ID = 11;
 
         //FIXME
         public static final int k_ENC_PORT_A = 0;
-        public static final int k_ENC_PORT_B = 1;
         public static final boolean k_ENC_REV = false;
     }
 }

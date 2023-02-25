@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.CANSparkMax;
@@ -11,12 +12,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.TelescopeConstants;
+import frc.robot.Constants.WristConstants;
 public class ATWSubsystem extends SubsystemBase{
     private final CANSparkMax armDriveLeader;
     private final CANSparkMax armDriveFollower;
@@ -25,7 +28,10 @@ public class ATWSubsystem extends SubsystemBase{
     private final GenericEntry armAngle, armOutput, telescopeReading, telescopeOutput;
     private final TalonSRX telescopeDriveLeader;
     private final VictorSPX telescopeDriveFollower;
-    private final Encoder telescopeEncoder;
+    private final DutyCycleEncoder teleEncoder;
+    private TalonSRX wristDriveMotor;
+    private Encoder wristEncoder;
+    private GenericEntry wristReading, wristOutput;
     public ATWSubsystem(){
         //init arm lead
         this.armDriveLeader = new CANSparkMax(ArmConstants.k_ARM_DRIVE_LEADER_ID, MotorType.kBrushless);
@@ -54,18 +60,24 @@ public class ATWSubsystem extends SubsystemBase{
         //init telescope lead (has to be talon)
         this.telescopeDriveLeader = new TalonSRX(TelescopeConstants.k_TELESCOPE_DRIVE_LEADER_ID);
         this.telescopeDriveLeader.setInverted(true);
+        this.telescopeDriveLeader.setNeutralMode(NeutralMode.Brake);
         //init telescope follow (has to be victor)
         this.telescopeDriveFollower = new VictorSPX(TelescopeConstants.k_TELESCOPE_DRIVE_FOLLOW_ID);
         this.telescopeDriveFollower.setInverted(false);
         this.telescopeDriveFollower.follow(telescopeDriveLeader);
+        this.telescopeDriveFollower.setNeutralMode(NeutralMode.Brake);
         //throughbore encoder (encoding type changes the pulses per revolution (higher = more precision))
-        this.telescopeEncoder = new Encoder(TelescopeConstants.k_ENC_PORT_A, TelescopeConstants.k_ENC_PORT_B, true, EncodingType.k4X);
-        
+        //this.telescopeEncoder = new Encoder(TelescopeConstants.k_ENC_PORT_A, TelescopeConstants.k_ENC_PORT_B, true, EncodingType.k4X);
+        this.teleEncoder = new DutyCycleEncoder(1);
+
+        this.wristDriveMotor = new TalonSRX(WristConstants.k_WRIST_MOTOR_ID);
         //shuffleboard
         this.telescopeReading = Shuffleboard.getTab("ATW").add("telescope reading", 0).getEntry();
         this.telescopeOutput = Shuffleboard.getTab("ATW").add("telescope output", 0).getEntry();
         this.armAngle = Shuffleboard.getTab("ATW").add("Arm Angle", 0).getEntry();
         this.armOutput = Shuffleboard.getTab("ATW").add("Arm Motor Output", 0).getEntry();
+        this.wristOutput = Shuffleboard.getTab("ATW").add("wrist output", 0).getEntry();
+        this.wristReading = Shuffleboard.getTab("ATW").add("wrist reading", 0).getEntry();
     }
     public void setArmMotors(double input){
         //stop it from going too far
@@ -73,7 +85,7 @@ public class ATWSubsystem extends SubsystemBase{
         //reduce input because adding the holding value could make it over 1
         input *= .9;
         //get holding output flips itself so we just add this
-        input += getArmHoldingOutput();
+        //input += getArmHoldingOutput();
         if(Math.abs(getArmPositionDegrees()) >= ArmConstants.k_SOFT_LIMIT && !((getArmPositionDegrees() < 0) ^ (input < 0))){
             input = 0;
         }
@@ -85,7 +97,7 @@ public class ATWSubsystem extends SubsystemBase{
 
     public double getArmPositionDegrees(){
         double angle = (armEncoder.getPosition() * 3);
-        return angle+90; 
+        return angle+0; 
     }
 
     public double getArmHoldingOutput(){
@@ -106,11 +118,12 @@ public class ATWSubsystem extends SubsystemBase{
     public void periodic() {
         //update position on shuffleboard
         this.armAngle.setDouble(getArmPositionDegrees());
-        this.telescopeReading.setDouble(telescopeEncoder.get());
+        this.telescopeReading.setDouble(getTelescopePosition());
+        this.wristReading.setDouble(getWristPosition());
     }
-    public int getTelescopePosition(){
+    public double getTelescopePosition(){
         //update position on shuffleboard
-        return this.telescopeEncoder.get();
+        return this.teleEncoder.get() * -1;
     }
     public void setTeleMotors(double input){
         if(getTelescopePosition() >= TelescopeConstants.k_FULL_EXTENSION && input > 0){
@@ -125,7 +138,18 @@ public class ATWSubsystem extends SubsystemBase{
         this.telescopeOutput.setDouble(input);
     }
     public void stopTeleMotors(){
-        telescopeDriveLeader.set(ControlMode.PercentOutput, 0);
+        setTeleMotors(0);
         this.telescopeOutput.setDouble(0);
+    }
+    public void setWristMotor(double input){
+        this.wristDriveMotor.set(ControlMode.PercentOutput, input);
+        this.wristOutput.setDouble(input);
+    }
+    public double getWristPosition(){
+        return this.wristDriveMotor.getSelectedSensorPosition();
+    }
+    public void stopWristMotor(){
+        setWristMotor(0);
+        this.wristOutput.setDouble(0);
     }
 }
