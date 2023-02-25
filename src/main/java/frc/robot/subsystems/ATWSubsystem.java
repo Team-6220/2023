@@ -29,9 +29,9 @@ public class ATWSubsystem extends SubsystemBase{
     private final TalonSRX telescopeDriveLeader;
     private final VictorSPX telescopeDriveFollower;
     private final DutyCycleEncoder teleEncoder;
-    private TalonSRX wristDriveMotor;
-    private Encoder wristEncoder;
-    private GenericEntry wristReading, wristOutput;
+    private final TalonSRX wristDriveMotor;
+    //private final Encoder wristEncoder;
+    private final GenericEntry wristReading, wristOutput;
     public ATWSubsystem(){
         //init arm lead
         this.armDriveLeader = new CANSparkMax(ArmConstants.k_ARM_DRIVE_LEADER_ID, MotorType.kBrushless);
@@ -71,6 +71,8 @@ public class ATWSubsystem extends SubsystemBase{
         this.teleEncoder = new DutyCycleEncoder(1);
 
         this.wristDriveMotor = new TalonSRX(WristConstants.k_WRIST_MOTOR_ID);
+        this.wristDriveMotor.setNeutralMode(NeutralMode.Brake);
+        this.wristDriveMotor.setInverted(true);
         //shuffleboard
         this.telescopeReading = Shuffleboard.getTab("ATW").add("telescope reading", 0).getEntry();
         this.telescopeOutput = Shuffleboard.getTab("ATW").add("telescope output", 0).getEntry();

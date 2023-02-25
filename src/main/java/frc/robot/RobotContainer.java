@@ -45,10 +45,10 @@ public class RobotContainer {
     private final double[] position3 = {-45, atwSubsystem.getTelescopePosition()};
     private final double[] position4 = {90, atwSubsystem.getTelescopePosition()};
     private final double[] position5 = {-90, atwSubsystem.getTelescopePosition()};
-    private final double[] position6 = {0, 1.5};
-    private final double[] position7 = {90, 1.5};
-    private final double[] position8 = {atwSubsystem.getArmPositionDegrees(), TelescopeConstants.k_FULL_RETRACTION + TelescopeConstants.k_FULL_EXTENSION * .66};
-    private final double[] position9 = {atwSubsystem.getArmPositionDegrees(), TelescopeConstants.k_FULL_RETRACTION + TelescopeConstants.k_FULL_EXTENSION * .9};
+    private final double[] position6 = {atwSubsystem.getArmPositionDegrees(), .5};
+    private final double[] position7 = {atwSubsystem.getArmPositionDegrees(), 1.5};
+    private final double[] position8 = {atwSubsystem.getArmPositionDegrees(), 2.5};
+    private final double[] position9 = {atwSubsystem.getArmPositionDegrees(), 3.5};
 
     public RobotContainer() {
         swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
@@ -60,8 +60,10 @@ public class RobotContainer {
         ));
         atwSubsystem.setDefaultCommand(new ATWJoystickCmd(
                 atwSubsystem,
+                () -> 0d,
                 () -> (-m_js.getY()*.5),
                 () -> (-m_js2.getY()*.5)
+
         ));
         traj = PathPlanner.loadPath("New Path", new PathConstraints(4, 3));
         configureButtonBindings();
@@ -79,9 +81,10 @@ public class RobotContainer {
         new Trigger(() -> m_js.getRawButtonPressed(6)).onTrue(new ATWPositionCmd(atwSubsystem, position5));
         new Trigger(() -> m_js2.getRawButtonPressed(7)).onTrue(new ATWPositionCmd(atwSubsystem, position6));
         new Trigger(() -> m_js2.getRawButtonPressed(8)).onTrue(new ATWPositionCmd(atwSubsystem, position7));
-        new Trigger(() -> m_js2.getRawButtonPressed(4)).onTrue(new ATWPositionCmd(atwSubsystem, position8));
-        new Trigger(() -> m_js2.getRawButtonPressed(5)).onTrue(new ATWPositionCmd(atwSubsystem, position9));
-        new Trigger(m_js2::getTriggerPressed).onTrue(new ATWJoystickCmd(atwSubsystem,  () -> (-m_js.getY()*.5),
+        new Trigger(() -> m_js2.getRawButtonPressed(9)).onTrue(new ATWPositionCmd(atwSubsystem, position8));
+        new Trigger(() -> m_js2.getRawButtonPressed(10)).onTrue(new ATWPositionCmd(atwSubsystem, position9));
+        new Trigger(m_js2::getTriggerPressed).onTrue(new ATWJoystickCmd(atwSubsystem,  () -> 0d,
+        () -> (-m_js.getY()*.5),
         () -> (-m_js2.getY()*.5)));
     }
 

@@ -133,7 +133,7 @@ public final class Constants {
         //FIXME
         public static final double k_FULL_EXTENSION = 4.03;
         //FIXME
-        public static final double k_FULL_RETRACTION = -0.66;
+        public static final double k_FULL_RETRACTION = 0;
         //FIXME
         public static final int k_ENC_PORT_A = 0;
         public static final int k_ENC_PORT_B = 1;
@@ -151,7 +151,7 @@ public final class Constants {
 
     public static final class IntakeConstants{
         //FIXME set solenoid ports
-        public static final int SOLENOID_PORT = 1;
+        public static final int SOLENOID_PORT = 7;
         //FIXME set intake speed
         public static final double k_CUBE_INTAKE_SPEED = 0;
         public static final double k_CONE_INTAKE_SPEED = 0;
@@ -159,10 +159,9 @@ public final class Constants {
     }
 
     public static final class WristConstants{
-        //FIXME set wrist motor id
-        public static final int k_WRIST_MOTOR_ID = 11;
-
-        //FIXME
+        public static final int k_WRIST_MOTOR_ID = 12;
+        public static final int k_WRIST_BOTTOM_LIMIT = 100;
+        public static final int k_WRIST_TOP_LIMIT = 1850;
         public static final int k_ENC_PORT_A = 0;
         public static final boolean k_ENC_REV = false;
     }

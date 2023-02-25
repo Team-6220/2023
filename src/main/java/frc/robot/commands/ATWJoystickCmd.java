@@ -4,14 +4,17 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ATWSubsystem;
+import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class ATWJoystickCmd extends CommandBase{
     private final ATWSubsystem atwSubsystem;
-    private final Supplier<Double> aInput, tInput;
-    public ATWJoystickCmd(ATWSubsystem atwSubsystem, Supplier<Double> aInput, Supplier<Double> tInput){
+    private final Supplier<Double> aInput, tInput, wInput;
+    public ATWJoystickCmd(ATWSubsystem atwSubsystem, Supplier<Double> aInput, Supplier<Double> tInput, Supplier<Double> wInput){
         this.atwSubsystem = atwSubsystem;
         this.aInput = aInput;
         this.tInput = tInput;
+        this.wInput = wInput;
         addRequirements(atwSubsystem);
     }
     @Override
@@ -22,13 +25,17 @@ public class ATWJoystickCmd extends CommandBase{
     public void execute() {
         double armSpeed = aInput.get();
         double teleSpeed = tInput.get();
+        double wristSpeed = wInput.get();
+        //System.out.println(wristSpeed);
         this.atwSubsystem.setArmMotors(armSpeed);
         this.atwSubsystem.setTeleMotors(teleSpeed);
+        this.atwSubsystem.setWristMotor(wristSpeed);
     }
     @Override
     public void end(boolean interrupted) {
         this.atwSubsystem.stopArm();
         this.atwSubsystem.stopTeleMotors();
+        this.atwSubsystem.stopWristMotor();
     }
 
     @Override

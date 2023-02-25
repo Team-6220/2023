@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.REVPhysicsSim;
 
@@ -18,6 +19,14 @@ public class IntakeSubsystem extends SubsystemBase{
         this.solenoid = new Solenoid(PneumaticsModuleType.REVPH, IntakeConstants.SOLENOID_PORT);
         this.compressor = new Compressor(PneumaticsModuleType.REVPH); 
     }
+
+    public void toggleSolenoid(){
+        this.solenoid.toggle();
+    }
+
+    public void setIntakeMotors(double input){
+        this.intakeDrive.set(ControlMode.PercentOutput, input);
+    }   
     
     
 }

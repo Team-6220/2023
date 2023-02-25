@@ -129,10 +129,6 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         odometer.update(getRotation2d(), this.positions);
-        backLeft.outputStates();
-        backRight.outputStates();
-        frontLeft.outputStates();
-        frontRight.outputStates();
         frontLeft.updatePosition();
         frontRight.updatePosition();
         backLeft.updatePosition();
@@ -152,6 +148,10 @@ public class SwerveSubsystem extends SubsystemBase {
         frontRight.setDesiredState(desiredStates[1]);
         backLeft.setDesiredState(desiredStates[2]);
         backRight.setDesiredState(desiredStates[3]);
+        backLeft.outputStates();
+        backRight.outputStates();
+        frontLeft.outputStates();
+        frontRight.outputStates();
         //System.out.println("set module states subsystem: " + desiredStates[0].angle.getDegrees());
         setModulePositions();
     }

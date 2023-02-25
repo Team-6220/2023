@@ -8,12 +8,16 @@ import frc.robot.subsystems.ATWSubsystem;
 public class ATWPositionCmd extends CommandBase{
     private final ATWSubsystem atwSubsystem;
     private final double[] positions;
-    private final PIDController armPidController, telePidController;
+    private final PIDController armPidController, telePidController, wristPidController;
     public ATWPositionCmd(ATWSubsystem atwSubsystem, double[] positions){
         this.atwSubsystem = atwSubsystem;
         this.positions = positions;
-        this.telePidController = new PIDController(.5, 0.25, 0);
-        this.armPidController = new PIDController(0.02, 0.00, 0.00);
+        //this.telePidController = new PIDController(0.00, 0.00, 0.00);
+        this.telePidController = new PIDController(.25, 0.25, 0);
+        //this.armPidController = new PIDController(0.02, 0.00, 0.00);
+        this.armPidController = new PIDController(0.00, 0.00, 0.00);
+        //this.wristPidController = new PIDController(0.00, 0.00, 0.00);
+        this.wristPidController = new PIDController(0.00, 0.00, 0.00);
         addRequirements(atwSubsystem);
     }
     @Override
