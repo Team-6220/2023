@@ -21,6 +21,8 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.TelescopeConstants;
 import frc.robot.commands.ATWJoystickCmd;
 import frc.robot.commands.ATWPositionCmd;
+import frc.robot.commands.IntakeDefaultCommand;
+import frc.robot.commands.PneumaticsDefaultCommand;
 import frc.robot.commands.ZeroGyroscope;
 import frc.robot.commands.autos.AutoACmd;
 import frc.robot.commands.autos.PathPlannerWEventsCmd;
@@ -30,12 +32,16 @@ import frc.robot.commands.drive.LockWheels;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.commands.drive.UnlockWheels;
 import frc.robot.subsystems.ATWSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.PneumaticSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
 
     private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
     private final ATWSubsystem atwSubsystem = new ATWSubsystem();
+    private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+    private final PneumaticSubsystem pneumaticSubsystem = new PneumaticSubsystem();
     private final XboxController m_controller = new XboxController(0);
     private final Joystick m_js = new Joystick(1);
     private final Joystick m_js2 = new Joystick(2);
@@ -65,6 +71,17 @@ public class RobotContainer {
                 () -> (-m_js2.getY()*.5)
 
         ));
+        intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
+            intakeSubsystem,
+            () -> m_controller.getLeftBumperPressed(), 
+            () -> m_controller.getRightBumperPressed()
+        ));
+        pneumaticSubsystem.setDefaultCommand(new PneumaticsDefaultCommand(
+            pneumaticSubsystem,
+            () -> m_controller.getXButtonPressed(), 
+            () -> m_controller.getYButtonPressed(),
+            () -> m_controller.getAButtonPressed(),
+            () -> m_controller.getBButtonPressed()));
         traj = PathPlanner.loadPath("New Path", new PathConstraints(4, 3));
         configureButtonBindings();
     }
