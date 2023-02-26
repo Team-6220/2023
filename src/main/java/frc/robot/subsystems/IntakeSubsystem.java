@@ -11,17 +11,18 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSubsystem extends SubsystemBase{
-    private final Compressor compressor;
-    private final Solenoid solenoid;
+
     private final VictorSPX intakeDrive;
     public IntakeSubsystem(){
         this.intakeDrive = new VictorSPX(IntakeConstants.k_INTAKE_MOTOR_ID);
-        this.solenoid = new Solenoid(PneumaticsModuleType.REVPH, IntakeConstants.SOLENOID_PORT);
-        this.compressor = new Compressor(PneumaticsModuleType.REVPH); 
     }
 
-    public void toggleSolenoid(){
-        this.solenoid.toggle();
+    public void setMotors(double input){
+        this.intakeDrive.set(ControlMode.PercentOutput, input);
+    }
+
+    public void stopMotors(){
+        this.intakeDrive.set(ControlMode.PercentOutput, 0);
     }
 
     public void setIntakeMotors(double input){
