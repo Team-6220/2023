@@ -131,9 +131,9 @@ public final class Constants {
         public static final int k_TELESCOPE_DRIVE_FOLLOW_ID = 9;
         public static final boolean k_MOTORS_REVERSED = false;
         //FIXME
-        public static final double k_FULL_EXTENSION = 4.03;
+        public static final double k_FULL_EXTENSION = 3.9;
         //FIXME
-        public static final double k_FULL_RETRACTION = 0;
+        public static final double k_FULL_RETRACTION = -.50;
         //FIXME
         public static final int k_ENC_PORT_A = 0;
         public static final int k_ENC_PORT_B = 1;
@@ -153,8 +153,8 @@ public final class Constants {
         //FIXME set solenoid ports
         public static final int SOLENOID_PORT = 7;
         //FIXME set intake speed
-        public static final double k_CUBE_INTAKE_SPEED = 0;
-        public static final double k_CONE_INTAKE_SPEED = 0;
+        public static final double k_CUBE_INTAKE_SPEED = 0.3;
+        public static final double k_CONE_INTAKE_SPEED = 0.5;
         public static final int k_INTAKE_MOTOR_ID = 10;
     }
 

@@ -73,8 +73,8 @@ public class RobotContainer {
         ));
         intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
             intakeSubsystem,
-            () -> m_controller.getLeftBumperPressed(), 
-            () -> m_controller.getRightBumperPressed()
+            () -> m_controller.getLeftBumper(), 
+            () -> m_controller.getRightBumper()
         ));
         pneumaticSubsystem.setDefaultCommand(new PneumaticsDefaultCommand(
             pneumaticSubsystem,

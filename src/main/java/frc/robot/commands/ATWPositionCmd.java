@@ -12,12 +12,12 @@ public class ATWPositionCmd extends CommandBase{
     public ATWPositionCmd(ATWSubsystem atwSubsystem, double[] positions){
         this.atwSubsystem = atwSubsystem;
         this.positions = positions;
-        //this.telePidController = new PIDController(0.00, 0.00, 0.00);
-        this.telePidController = new PIDController(.25, 0.25, 0);
+        this.telePidController = new PIDController(0.00, 0.00, 0.00);
+        //this.telePidController = new PIDController(.6, 0.23, 0.15);
         //this.armPidController = new PIDController(0.02, 0.00, 0.00);
         this.armPidController = new PIDController(0.00, 0.00, 0.00);
         //this.wristPidController = new PIDController(0.00, 0.00, 0.00);
-        this.wristPidController = new PIDController(0.00, 0.00, 0.00);
+        this.wristPidController = new PIDController(0.0001, 0.00, 0.00);
         addRequirements(atwSubsystem);
     }
     @Override
@@ -26,7 +26,7 @@ public class ATWPositionCmd extends CommandBase{
         armOutput = (armOutput > .4)?.4:(armOutput< -.4)?-.4:armOutput;
         this.atwSubsystem.setArmMotors(armOutput);
         double telescopeOutput = telePidController.calculate(atwSubsystem.getTelescopePosition(), positions[1]);
-        telescopeOutput *= (telescopeOutput > .5)?.5:(telescopeOutput<-.5)?-.5:telescopeOutput;
+        telescopeOutput = (telescopeOutput > .5)?.5:(telescopeOutput<-.5)?-.5:telescopeOutput;
         this.atwSubsystem.setTeleMotors(telescopeOutput); 
     }
 }

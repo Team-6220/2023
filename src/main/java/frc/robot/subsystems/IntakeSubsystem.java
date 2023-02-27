@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import com.revrobotics.REVPhysicsSim;
 
@@ -15,6 +16,8 @@ public class IntakeSubsystem extends SubsystemBase{
     private final VictorSPX intakeDrive;
     public IntakeSubsystem(){
         this.intakeDrive = new VictorSPX(IntakeConstants.k_INTAKE_MOTOR_ID);
+        this.intakeDrive.setInverted(false);
+        this.intakeDrive.setNeutralMode(NeutralMode.Brake);
     }
 
     public void setMotors(double input){

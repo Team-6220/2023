@@ -148,7 +148,7 @@ public class ATWSubsystem extends SubsystemBase{
         this.wristOutput.setDouble(input);
     }
     public double getWristPosition(){
-        return this.wristDriveMotor.getSelectedSensorPosition();
+        return this.wristDriveMotor.getSelectedSensorPosition()*-1;
     }
     public void stopWristMotor(){
         setWristMotor(0);
