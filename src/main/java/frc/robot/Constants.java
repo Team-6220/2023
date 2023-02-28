@@ -119,7 +119,7 @@ public final class Constants {
             public static final int k_PERCENT = 0;
             public static final int k_POSITION = 1;
         } 
-        public static final double k_SOFT_LIMIT = 100;
+        public static final double k_SOFT_LIMIT = 125;
 
     }
 
@@ -131,7 +131,7 @@ public final class Constants {
         public static final int k_TELESCOPE_DRIVE_FOLLOW_ID = 9;
         public static final boolean k_MOTORS_REVERSED = false;
         //FIXME
-        public static final double k_FULL_EXTENSION = 3.9;
+        public static final double k_FULL_EXTENSION = 5;
         //FIXME
         public static final double k_FULL_RETRACTION = -.50;
         //FIXME
@@ -151,7 +151,7 @@ public final class Constants {
 
     public static final class IntakeConstants{
         //FIXME set solenoid ports
-        public static final int SOLENOID_PORT = 7;
+        public static final int SOLENOID_PORT = 8;
         //FIXME set intake speed
         public static final double k_CUBE_INTAKE_SPEED = 0.3;
         public static final double k_CONE_INTAKE_SPEED = 0.5;

@@ -46,22 +46,25 @@ public class RobotContainer {
     private final Joystick m_js = new Joystick(1);
     private final Joystick m_js2 = new Joystick(2);
     private final PathPlannerTrajectory traj;
-    private final double[] position1 = {0, atwSubsystem.getTelescopePosition()};
-    private final double[] position2 = {45, atwSubsystem.getTelescopePosition()};
-    private final double[] position3 = {-45, atwSubsystem.getTelescopePosition()};
-    private final double[] position4 = {90, atwSubsystem.getTelescopePosition()};
-    private final double[] position5 = {-90, atwSubsystem.getTelescopePosition()};
-    private final double[] position6 = {atwSubsystem.getArmPositionDegrees(), .5};
-    private final double[] position7 = {atwSubsystem.getArmPositionDegrees(), 1.5};
-    private final double[] position8 = {atwSubsystem.getArmPositionDegrees(), 2.5};
-    private final double[] position9 = {atwSubsystem.getArmPositionDegrees(), 3.5};
+    private final double[] position1 = {0, 0, -30};
+    private final double[] position2 = {45, 0, -30};
+    private final double[] position3 = {-45, 0, -30};
+    private final double[] position4 = {90, 0, -30};
+    private final double[] position5 = {-90, 0, 0};
+    private final double[] position6 = {-90, .5, -1000};
+    private final double[] position7 = {-45, 1, -500};
+    private final double[] position8 = {-120, -.2, -1320};
+    private final double[] position9 = {-55.4, 1.7, -725};
+    private final double[] position10 = {-45, 5, -725};
+    // private final double[] position11 = {0,0,-1000};
+    // private final double[] position12 = {0,0,-1500};
 
     public RobotContainer() {
         swerveSubsystem.setDefaultCommand(new SwerveJoystickCmd(
                 swerveSubsystem,
                 () -> -m_controller.getRawAxis(OIConstants.kDriverYAxis),
                 () -> m_controller.getRawAxis(OIConstants.kDriverXAxis),
-                () -> m_controller.getRawAxis(OIConstants.kDriverRotAxis),
+                () -> -m_controller.getRawAxis(OIConstants.kDriverRotAxis),
                 () -> !m_controller.getRawButton(OIConstants.kDriverFieldOrientedButtonIdx)
         ));
         atwSubsystem.setDefaultCommand(new ATWJoystickCmd(
@@ -100,6 +103,8 @@ public class RobotContainer {
         new Trigger(() -> m_js2.getRawButtonPressed(8)).onTrue(new ATWPositionCmd(atwSubsystem, position7));
         new Trigger(() -> m_js2.getRawButtonPressed(9)).onTrue(new ATWPositionCmd(atwSubsystem, position8));
         new Trigger(() -> m_js2.getRawButtonPressed(10)).onTrue(new ATWPositionCmd(atwSubsystem, position9));
+        new Trigger(() -> m_js2.getRawButtonPressed(11)).onTrue(new ATWPositionCmd(atwSubsystem, position10));
+        // new Trigger(() -> m_js2.getRawButtonPressed(12)).onTrue(new ATWPositionCmd(atwSubsystem, position12));
         new Trigger(m_js2::getTriggerPressed).onTrue(new ATWJoystickCmd(atwSubsystem,  () -> 0d,
         () -> (-m_js.getY()*.5),
         () -> (-m_js2.getY()*.5)));

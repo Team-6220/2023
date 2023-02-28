@@ -16,7 +16,7 @@ public class IntakeSubsystem extends SubsystemBase{
     private final VictorSPX intakeDrive;
     public IntakeSubsystem(){
         this.intakeDrive = new VictorSPX(IntakeConstants.k_INTAKE_MOTOR_ID);
-        this.intakeDrive.setInverted(false);
+        this.intakeDrive.setInverted(true);
         this.intakeDrive.setNeutralMode(NeutralMode.Brake);
     }
 

@@ -22,7 +22,7 @@ public class IntakeDefaultCommand extends CommandBase{
         if(RBumper.get()){
             intakeSubsystem.setIntakeMotors(IntakeConstants.k_CONE_INTAKE_SPEED);
         }else if(LBumper.get()){
-            intakeSubsystem.setIntakeMotors(IntakeConstants.k_CUBE_INTAKE_SPEED);
+            intakeSubsystem.setIntakeMotors(-IntakeConstants.k_CONE_INTAKE_SPEED);
         }else{
             intakeSubsystem.stopMotors();
         }
