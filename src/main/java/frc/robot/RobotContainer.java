@@ -27,6 +27,7 @@ import frc.robot.commands.ZeroGyroscope;
 import frc.robot.commands.autos.AutoACmd;
 import frc.robot.commands.autos.PathPlannerWEventsCmd;
 import frc.robot.commands.autos.SampleAutoCommand;
+import frc.robot.commands.drive.CalibrateWheelsCmd;
 import frc.robot.commands.drive.LockWheels;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.commands.drive.UnlockWheels;
@@ -90,14 +91,45 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         new Trigger(m_controller::getBackButtonPressed).onTrue(new ZeroGyroscope(swerveSubsystem));
+        new Trigger(m_controller::getStartButtonPressed).onTrue(new CalibrateWheelsCmd(swerveSubsystem));
         new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheels(swerveSubsystem));
         new Trigger(m_controller::getBButtonPressed).onTrue(new UnlockWheels(swerveSubsystem));
-        new Trigger(() -> m_js.getRawButtonPressed(2)).onTrue(new ATWPositionCmd(atwSubsystem, position1));
-        new Trigger(() -> m_js2.getRawButtonPressed(7)).onTrue(new ATWPositionCmd(atwSubsystem, position6));
-        new Trigger(() -> m_js2.getRawButtonPressed(8)).onTrue(new ATWPositionCmd(atwSubsystem, position7));
-        new Trigger(() -> m_js2.getRawButtonPressed(9)).onTrue(new ATWPositionCmd(atwSubsystem, position8));
-        new Trigger(() -> m_js2.getRawButtonPressed(10)).onTrue(new ATWPositionCmd(atwSubsystem, position9));
-        new Trigger(() -> m_js2.getRawButtonPressed(11)).onTrue(new ATWPositionCmd(atwSubsystem, position10));
+        new Trigger(() -> m_js.getRawButtonPressed(2)).onTrue(new ATWPositionCmd(
+            atwSubsystem,
+            position1,
+            () -> m_js.getThrottle(),
+            () -> m_js2.getThrottle()
+        ));
+        new Trigger(() -> m_js2.getRawButtonPressed(7)).onTrue(new ATWPositionCmd(
+            atwSubsystem,
+            position6,
+            () -> m_js.getThrottle(),
+            () -> m_js2.getThrottle()
+        ));
+        new Trigger(() -> m_js2.getRawButtonPressed(8)).onTrue(new ATWPositionCmd(
+            atwSubsystem,
+            position7,
+            () -> m_js.getThrottle(),
+            () -> m_js2.getThrottle()
+        ));
+        new Trigger(() -> m_js2.getRawButtonPressed(9)).onTrue(new ATWPositionCmd(
+            atwSubsystem,
+            position8,
+            () -> m_js.getThrottle(),
+            () -> m_js2.getThrottle()
+        ));
+        new Trigger(() -> m_js2.getRawButtonPressed(10)).onTrue(new ATWPositionCmd(
+            atwSubsystem,
+            position9,
+            () -> m_js.getThrottle(),
+            () -> m_js2.getThrottle()
+        ));
+        new Trigger(() -> m_js2.getRawButtonPressed(11)).onTrue(new ATWPositionCmd(
+            atwSubsystem,
+            position10,
+            () -> m_js.getThrottle(),
+            () -> m_js2.getThrottle()
+        ));
         // new Trigger(() -> m_js2.getRawButtonPressed(12)).onTrue(new ATWPositionCmd(atwSubsystem, position12));
         new Trigger(m_js2::getTriggerPressed).onTrue(new ATWJoystickCmd(atwSubsystem,  () -> 0d,
         () -> (-m_js.getY()*.5),

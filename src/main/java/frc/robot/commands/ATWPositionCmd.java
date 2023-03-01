@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import java.util.function.Supplier;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -9,7 +11,8 @@ public class ATWPositionCmd extends CommandBase{
     private final ATWSubsystem atwSubsystem;
     private final double[] positions;
     private final PIDController armPidController, telePidController, wristPidController;
-    public ATWPositionCmd(ATWSubsystem atwSubsystem, double[] positions){
+    private final Supplier<Double> armAdjust, wristAdjust;
+    public ATWPositionCmd(ATWSubsystem atwSubsystem, double[] positions, Supplier<Double> armAdjust, Supplier<Double> wristAdjust){
         this.atwSubsystem = atwSubsystem;
         this.positions = positions;
         //this.telePidController = new PIDController(0.00, 0.00, 0.00);
@@ -18,6 +21,8 @@ public class ATWPositionCmd extends CommandBase{
         //this.armPidController = new PIDController(0.00, 0.00, 0.00);
         //this.wristPidController = new PIDController(0.00, 0.00, 0.00);
         this.wristPidController = new PIDController(0.004, 0.00, 0.00);
+        this.armAdjust = armAdjust;
+        this.wristAdjust = wristAdjust; 
         addRequirements(atwSubsystem);
     }
     @Override
