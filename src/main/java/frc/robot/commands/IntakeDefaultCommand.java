@@ -20,9 +20,9 @@ public class IntakeDefaultCommand extends CommandBase{
     @Override
     public void execute(){
         if(RBumper.get()){
-            intakeSubsystem.setIntakeMotors(IntakeConstants.k_CONE_INTAKE_SPEED);
+            intakeSubsystem.setIntakeMotors(.75);
         }else if(LBumper.get()){
-            intakeSubsystem.setIntakeMotors(-IntakeConstants.k_CONE_INTAKE_SPEED);
+            intakeSubsystem.setIntakeMotors(-IntakeConstants.k_CUBE_INTAKE_SPEED);
         }else{
             intakeSubsystem.stopMotors();
         }

@@ -28,7 +28,7 @@ public class ATWSubsystem extends SubsystemBase{
     private final GenericEntry armAngle, armOutput, telescopeReading, telescopeOutput;
     private final TalonSRX telescopeDriveLeader;
     private final VictorSPX telescopeDriveFollower;
-    private final DutyCycleEncoder teleEncoder;
+    private final Encoder telescopeEncoder;
     private final TalonSRX wristDriveMotor;
     //private final Encoder wristEncoder;
     private final GenericEntry wristReading, wristOutput;
@@ -67,8 +67,9 @@ public class ATWSubsystem extends SubsystemBase{
         this.telescopeDriveFollower.follow(telescopeDriveLeader);
         this.telescopeDriveFollower.setNeutralMode(NeutralMode.Brake);
         //throughbore encoder (encoding type changes the pulses per revolution (higher = more precision))
-        //this.telescopeEncoder = new Encoder(TelescopeConstants.k_ENC_PORT_A, TelescopeConstants.k_ENC_PORT_B, true, EncodingType.k4X);
-        this.teleEncoder = new DutyCycleEncoder(1);
+        this.telescopeEncoder = new Encoder(TelescopeConstants.k_ENC_PORT_A, TelescopeConstants.k_ENC_PORT_B, true, EncodingType.k4X);
+        //this.teleEncoder = new DutyCycleEncoder(1);
+        //TelescopeConstants.telescopeOffset = teleEncoder.get();
 
         this.wristDriveMotor = new TalonSRX(WristConstants.k_WRIST_MOTOR_ID);
         this.wristDriveMotor.setNeutralMode(NeutralMode.Brake);
@@ -110,7 +111,6 @@ public class ATWSubsystem extends SubsystemBase{
         out *= (getArmPositionDegrees() > 0)?-1:1; 
         return out;
     }
-
     public void stopArm(){
         //this will actually output the holding value not 0
         setArmMotors(0);
@@ -125,7 +125,7 @@ public class ATWSubsystem extends SubsystemBase{
     }
     public double getTelescopePosition(){
         //update position on shuffleboard
-        return this.teleEncoder.get() * -1;
+        return (this.telescopeEncoder.get());
     }
     public void setTeleMotors(double input){
         if(getTelescopePosition() >= TelescopeConstants.k_FULL_EXTENSION && input > 0){

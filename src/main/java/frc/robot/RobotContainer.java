@@ -95,10 +95,6 @@ public class RobotContainer {
         new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheels(swerveSubsystem));
         new Trigger(m_controller::getBButtonPressed).onTrue(new UnlockWheels(swerveSubsystem));
         new Trigger(() -> m_js.getRawButtonPressed(2)).onTrue(new ATWPositionCmd(atwSubsystem, position1));
-        new Trigger(() -> m_js.getRawButtonPressed(3)).onTrue(new ATWPositionCmd(atwSubsystem, position2));
-        new Trigger(() -> m_js.getRawButtonPressed(4)).onTrue(new ATWPositionCmd(atwSubsystem, position3));
-        new Trigger(() -> m_js.getRawButtonPressed(5)).onTrue(new ATWPositionCmd(atwSubsystem, position4));
-        new Trigger(() -> m_js.getRawButtonPressed(6)).onTrue(new ATWPositionCmd(atwSubsystem, position5));
         new Trigger(() -> m_js2.getRawButtonPressed(7)).onTrue(new ATWPositionCmd(atwSubsystem, position6));
         new Trigger(() -> m_js2.getRawButtonPressed(8)).onTrue(new ATWPositionCmd(atwSubsystem, position7));
         new Trigger(() -> m_js2.getRawButtonPressed(9)).onTrue(new ATWPositionCmd(atwSubsystem, position8));

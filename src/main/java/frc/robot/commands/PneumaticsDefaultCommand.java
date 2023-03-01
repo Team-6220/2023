@@ -25,10 +25,10 @@ public class PneumaticsDefaultCommand extends CommandBase{
             pneumaticSubsystem.disableCompressor();
         }
         if(AButton.get()){
-            //pneumaticSubsystem.openSolenoid();
+            pneumaticSubsystem.openSolenoid();
         }
         else if(BButton.get()){
-            //pneumaticSubsystem.closeSolenoid();
+            pneumaticSubsystem.closeSolenoid();
         }
     }
 

@@ -10,11 +10,11 @@ import frc.robot.Constants.IntakeConstants;
 
 public class PneumaticSubsystem extends SubsystemBase{
     private final Compressor compressor;
-    //private final Solenoid solenoid;
+    private final Solenoid solenoid;
     private final GenericEntry solenoidState, compressorState;
     public PneumaticSubsystem(){
         compressor = new Compressor(PneumaticsModuleType.REVPH);
-        //this.solenoid = new Solenoid(PneumaticsModuleType.REVPH, IntakeConstants.SOLENOID_PORT);
+        this.solenoid = new Solenoid(PneumaticsModuleType.REVPH, IntakeConstants.SOLENOID_PORT);
         solenoidState = Shuffleboard.getTab("ATW").add("solenoid state", false).getEntry();
         compressorState = Shuffleboard.getTab("ATW").add("compressor state", compressor.isEnabled()).getEntry();
     }
@@ -29,20 +29,20 @@ public class PneumaticSubsystem extends SubsystemBase{
             compressor.disable();
         }
     }
-    // public void openSolenoid(){
-    //     if(!solenoid.get()){
-    //         solenoid.toggle();
-    //     }
-    // }
+    public void openSolenoid(){
+        if(!solenoid.get()){
+            solenoid.toggle();
+        }
+    }
 
-    // public void closeSolenoid(){
-    //     if(solenoid.get()){
-    //         solenoid.toggle();
-    //     }
-    // }
+    public void closeSolenoid(){
+        if(solenoid.get()){
+            solenoid.toggle();
+        }
+    }
     @Override
     public void periodic() {
-        //solenoidState.setBoolean(solenoid.get());
+        solenoidState.setBoolean(solenoid.get());
         compressorState.setBoolean(compressor.isEnabled());
     }
 
