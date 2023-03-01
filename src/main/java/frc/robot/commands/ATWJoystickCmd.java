@@ -4,8 +4,6 @@ import java.util.function.Supplier;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ATWSubsystem;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 public class ATWJoystickCmd extends CommandBase{
     private final ATWSubsystem atwSubsystem;

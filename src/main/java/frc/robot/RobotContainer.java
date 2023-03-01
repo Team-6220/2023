@@ -1,39 +1,22 @@
 package frc.robot;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
-import java.util.HashMap;
-
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-import com.pathplanner.lib.commands.FollowPathWithEvents;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
-import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.TelescopeConstants;
 import frc.robot.commands.ATWJoystickCmd;
 import frc.robot.commands.ATWPositionCmd;
 import frc.robot.commands.IntakeDefaultCommand;
-import frc.robot.commands.PneumaticsDefaultCommand;
 import frc.robot.commands.ZeroGyroscope;
 import frc.robot.commands.autos.AutoACmd;
-import frc.robot.commands.autos.PathPlannerWEventsCmd;
-import frc.robot.commands.autos.SampleAutoCommand;
 import frc.robot.commands.drive.CalibrateWheelsCmd;
 import frc.robot.commands.drive.LockWheels;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.commands.drive.UnlockWheels;
 import frc.robot.subsystems.ATWSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.PneumaticSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class RobotContainer {
@@ -41,11 +24,9 @@ public class RobotContainer {
     private final SwerveSubsystem swerveSubsystem = new SwerveSubsystem();
     private final ATWSubsystem atwSubsystem = new ATWSubsystem();
     private final IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
-    private final PneumaticSubsystem pneumaticSubsystem = new PneumaticSubsystem();
     private final XboxController m_controller = new XboxController(0);
     private final Joystick m_js = new Joystick(1);
     private final Joystick m_js2 = new Joystick(2);
-    private final PathPlannerTrajectory traj;
     private final double[] position1 = {0, 30, -30};//zero
     private final double[] position6 = {-90, 1000, -1000};//flat
     private final double[] position7 = {-45, 2000, -500};//notc
@@ -72,16 +53,11 @@ public class RobotContainer {
         ));
         intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
             intakeSubsystem,
-            () -> m_controller.getLeftBumper(), 
-            () -> m_controller.getRightBumper()
+            m_js::getTrigger,
+            () -> m_js.getRawButton(2), 
+            m_js2::getTrigger,
+            () -> m_js.getRawButton(2)
         ));
-        pneumaticSubsystem.setDefaultCommand(new PneumaticsDefaultCommand(
-            pneumaticSubsystem,
-            () -> m_controller.getXButtonPressed(), 
-            () -> m_controller.getYButtonPressed(),
-            () -> m_controller.getAButtonPressed(),
-            () -> m_controller.getBButtonPressed()));
-        traj = PathPlanner.loadPath("New Path", new PathConstraints(4, 3));
         configureButtonBindings();
     }
 

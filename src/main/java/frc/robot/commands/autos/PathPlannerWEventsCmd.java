@@ -4,8 +4,6 @@ package frc.robot.commands.autos;
 
 import java.util.HashMap;
 
-import javax.swing.SwingWorker;
-
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.FollowPathWithEvents;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
