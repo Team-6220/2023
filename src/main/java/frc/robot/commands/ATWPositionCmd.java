@@ -13,7 +13,7 @@ public class ATWPositionCmd extends CommandBase{
         this.atwSubsystem = atwSubsystem;
         this.positions = positions;
         //this.telePidController = new PIDController(0.00, 0.00, 0.00);
-        this.telePidController = new PIDController(.8, 0, 0);
+        this.telePidController = new PIDController(.002, 0, 0);
         this.armPidController = new PIDController(0.02, 0.00, 0.00);
         //this.armPidController = new PIDController(0.00, 0.00, 0.00);
         //this.wristPidController = new PIDController(0.00, 0.00, 0.00);

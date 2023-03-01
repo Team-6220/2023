@@ -14,7 +14,7 @@ public class AutoBalanceCommand extends CommandBase{
     public AutoBalanceCommand(SwerveSubsystem drivetrainSubsystem){
         this.m_drivetrainSubsystem = drivetrainSubsystem;
         this.m_pose3d = new Pose3d(drivetrainSubsystem.getPose());
-        this.m_pid = new PIDController(0.5,0.5,0.5);
+        this.m_pid = new PIDController(0.5,0,0);
         addRequirements(drivetrainSubsystem);
     }
 

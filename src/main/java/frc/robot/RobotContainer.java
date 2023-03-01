@@ -27,7 +27,6 @@ import frc.robot.commands.ZeroGyroscope;
 import frc.robot.commands.autos.AutoACmd;
 import frc.robot.commands.autos.PathPlannerWEventsCmd;
 import frc.robot.commands.autos.SampleAutoCommand;
-import frc.robot.commands.drive.CalibrateWheelsCmd;
 import frc.robot.commands.drive.LockWheels;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.commands.drive.UnlockWheels;
@@ -46,16 +45,16 @@ public class RobotContainer {
     private final Joystick m_js = new Joystick(1);
     private final Joystick m_js2 = new Joystick(2);
     private final PathPlannerTrajectory traj;
-    private final double[] position1 = {0, 0, -30};
+    private final double[] position1 = {0, 30, -30};
     private final double[] position2 = {45, 0, -30};
     private final double[] position3 = {-45, 0, -30};
     private final double[] position4 = {90, 0, -30};
     private final double[] position5 = {-90, 0, 0};
-    private final double[] position6 = {-90, .5, -1000};
-    private final double[] position7 = {-45, 1, -500};
-    private final double[] position8 = {-120, -.2, -1320};
-    private final double[] position9 = {-55.4, 1.7, -725};
-    private final double[] position10 = {-45, 5, -725};
+    private final double[] position6 = {-90, 1000, -1000};
+    private final double[] position7 = {-45, 2000, -500};
+    private final double[] position8 = {-115, 1250, -1320};
+    private final double[] position9 = {-50, 3922, -725};
+    private final double[] position10 = {-50, 8600, -725};
     // private final double[] position11 = {0,0,-1000};
     // private final double[] position12 = {0,0,-1500};
 
@@ -91,7 +90,6 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         new Trigger(m_controller::getBackButtonPressed).onTrue(new ZeroGyroscope(swerveSubsystem));
-        new Trigger(m_controller::getStartButtonPressed).onTrue(new CalibrateWheelsCmd(swerveSubsystem));
         new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheels(swerveSubsystem));
         new Trigger(m_controller::getBButtonPressed).onTrue(new UnlockWheels(swerveSubsystem));
         new Trigger(() -> m_js.getRawButtonPressed(2)).onTrue(new ATWPositionCmd(atwSubsystem, position1));
@@ -104,7 +102,8 @@ public class RobotContainer {
         new Trigger(m_js2::getTriggerPressed).onTrue(new ATWJoystickCmd(atwSubsystem,  () -> 0d,
         () -> (-m_js.getY()*.5),
         () -> (-m_js2.getY()*.5)));
-    }
+        new Trigger(m_js::getTriggerPressed).onTrue(new LockWheels(swerveSubsystem));
+   }
 
     public Command getAutonomousCommand() {
         // HashMap<String, Command> eventMap = new HashMap<>();

@@ -131,7 +131,7 @@ public final class Constants {
         public static final int k_TELESCOPE_DRIVE_FOLLOW_ID = 9;
         public static final boolean k_MOTORS_REVERSED = false;
         public static double telescopeOffset = 0;
-        public static final double k_FULL_EXTENSION = 4.7;
+        public static final double k_FULL_EXTENSION = 9000;
         public static final double k_FULL_RETRACTION = 0;
         public static final int k_ENC_PORT_A = 0;
         public static final int k_ENC_PORT_B = 1;
