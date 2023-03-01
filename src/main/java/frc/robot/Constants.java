@@ -151,8 +151,10 @@ public final class Constants {
         //FIXME set solenoid ports
         public static final int SOLENOID_PORT = 8;
         //FIXME set intake speed
-        public static final double k_CUBE_INTAKE_SPEED = 0.3;
-        public static final double k_CONE_INTAKE_SPEED = 0.5;
+        public static final double k_CUBE_INTAKE_SPEED = 0.4;
+        public static final double k_CUBE_OUTTAKE_SPEED = -0.25;
+        public static final double k_CONE_INTAKE_SPEED = 0.75;
+        public static final double k_CONE_OUTTAKE_SPEED = -0.75;
         public static final int k_INTAKE_MOTOR_ID = 10;
     }
 
