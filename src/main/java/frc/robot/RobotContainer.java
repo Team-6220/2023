@@ -46,16 +46,12 @@ public class RobotContainer {
     private final Joystick m_js = new Joystick(1);
     private final Joystick m_js2 = new Joystick(2);
     private final PathPlannerTrajectory traj;
-    private final double[] position1 = {0, 30, -30};
-    private final double[] position2 = {45, 0, -30};
-    private final double[] position3 = {-45, 0, -30};
-    private final double[] position4 = {90, 0, -30};
-    private final double[] position5 = {-90, 0, 0};
-    private final double[] position6 = {-90, 1000, -1000};
-    private final double[] position7 = {-45, 2000, -500};
-    private final double[] position8 = {-115, 1250, -1320};
-    private final double[] position9 = {-50, 3922, -725};
-    private final double[] position10 = {-50, 8600, -725};
+    private final double[] position1 = {0, 30, -30};//zero
+    private final double[] position6 = {-90, 1000, -1000};//flat
+    private final double[] position7 = {-45, 2000, -500};//notc
+    private final double[] position8 = {-115, 1250, -1320};//pickup
+    private final double[] position9 = {-50, 3922, -725};//mid cone
+    private final double[] position10 = {-50, 8600, -725};//high cone
     // private final double[] position11 = {0,0,-1000};
     // private final double[] position12 = {0,0,-1500};
 
@@ -94,47 +90,48 @@ public class RobotContainer {
         new Trigger(m_controller::getStartButtonPressed).onTrue(new CalibrateWheelsCmd(swerveSubsystem));
         new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheels(swerveSubsystem));
         new Trigger(m_controller::getBButtonPressed).onTrue(new UnlockWheels(swerveSubsystem));
-        new Trigger(() -> m_js.getRawButtonPressed(2)).onTrue(new ATWPositionCmd(
+        //zero that bih!
+        new Trigger(() -> m_js2.getRawButtonPressed(7)).onTrue(new ATWPositionCmd(
             atwSubsystem,
             position1,
             () -> m_js.getThrottle(),
             () -> m_js2.getThrottle()
         ));
-        new Trigger(() -> m_js2.getRawButtonPressed(7)).onTrue(new ATWPositionCmd(
+        //flat like a door (or your mother)
+        new Trigger(() -> m_js2.getRawButtonPressed(11)).onTrue(new ATWPositionCmd(
             atwSubsystem,
             position6,
             () -> m_js.getThrottle(),
             () -> m_js2.getThrottle()
         ));
-        new Trigger(() -> m_js2.getRawButtonPressed(8)).onTrue(new ATWPositionCmd(
+        //the thing that a notc would do
+        new Trigger(() -> m_js2.getRawButtonPressed(12)).onTrue(new ATWPositionCmd(
             atwSubsystem,
             position7,
             () -> m_js.getThrottle(),
             () -> m_js2.getThrottle()
         ));
-        new Trigger(() -> m_js2.getRawButtonPressed(9)).onTrue(new ATWPositionCmd(
+        //pick that shi up
+        new Trigger(() -> m_js2.getRawButtonPressed(3)).onTrue(new ATWPositionCmd(
             atwSubsystem,
             position8,
             () -> m_js.getThrottle(),
             () -> m_js2.getThrottle()
         ));
-        new Trigger(() -> m_js2.getRawButtonPressed(10)).onTrue(new ATWPositionCmd(
+        //mid cone (negative direction)
+        new Trigger(() -> m_js2.getRawButtonPressed(4)).onTrue(new ATWPositionCmd(
             atwSubsystem,
             position9,
             () -> m_js.getThrottle(),
             () -> m_js2.getThrottle()
         ));
-        new Trigger(() -> m_js2.getRawButtonPressed(11)).onTrue(new ATWPositionCmd(
+        //high cone (negative direction)
+        new Trigger(() -> m_js2.getRawButtonPressed(5)).onTrue(new ATWPositionCmd(
             atwSubsystem,
             position10,
             () -> m_js.getThrottle(),
             () -> m_js2.getThrottle()
         ));
-        // new Trigger(() -> m_js2.getRawButtonPressed(12)).onTrue(new ATWPositionCmd(atwSubsystem, position12));
-        new Trigger(m_js2::getTriggerPressed).onTrue(new ATWJoystickCmd(atwSubsystem,  () -> 0d,
-        () -> (-m_js.getY()*.5),
-        () -> (-m_js2.getY()*.5)));
-        new Trigger(m_js::getTriggerPressed).onTrue(new LockWheels(swerveSubsystem));
    }
 
     public Command getAutonomousCommand() {
