@@ -128,11 +128,12 @@ public class SwerveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        odometer.update(getRotation2d(), this.positions);
         frontLeft.updatePosition();
         frontRight.updatePosition();
         backLeft.updatePosition();
         backRight.updatePosition();
+        setModulePositions();
+        odometer.update(getRotation2d(), this.positions);
     }
 
     public void stopModules() {

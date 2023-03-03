@@ -31,26 +31,25 @@ public class SampleAutoCommand extends SequentialCommandGroup {
             TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 new Pose2d(0, 0, new Rotation2d(0)),
-                // Pass through these two interior waypoints, making an 's' curve path
                 List.of(
-                    new Translation2d(-.5, 0),
-                    new Translation2d(-.5, .5),
-                    new Translation2d(0, .5)
+                    new Translation2d(1, 0),
+                    new Translation2d(2, 0),
+                    new Translation2d(3, 0)
                 ),
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(.5, 1, new Rotation2d(Math.toRadians(0))),
+                new Pose2d(4.72, 0, new Rotation2d(0)),
                 config);
 
         var thetaController =
             new ProfiledPIDController(
-                AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+                -3, 0, 0, AutoConstants.kThetaControllerConstraints);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         HolonomicDriveController hController = new HolonomicDriveController(
-            new PIDController(AutoConstants.kPXController, 0, 0),
-            new PIDController(AutoConstants.kPYController, 0, 0),
+            new PIDController(2.5, 1, 0),
+            new PIDController(.5, 0, 0),
             thetaController
-            );
+        );
 
         SwerveControllerCommand swerveControllerCommand =
             new SwerveControllerCommand(

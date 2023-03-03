@@ -15,7 +15,7 @@ public class ATWPositionCmd extends CommandBase{
         this.atwSubsystem = atwSubsystem;
         this.positions = positions;
         //this.telePidController = new PIDController(0.00, 0.00, 0.00);
-        this.telePidController = new PIDController(.002, 0, 0);
+        this.telePidController = new PIDController(.003, 0, 0);
         this.armPidController = new PIDController(0.02, 0.00, 0.00);
         //this.armPidController = new PIDController(0.00, 0.00, 0.00);
         //this.wristPidController = new PIDController(0.00, 0.00, 0.00);
@@ -26,14 +26,18 @@ public class ATWPositionCmd extends CommandBase{
     }
     @Override
     public void execute() {
-        double armOutput = armPidController.calculate(atwSubsystem.getArmPositionDegrees(), positions[0]);
+        double armSet  = positions[0] + (this.armAdjust.get()*-5);
+        double armOutput = armPidController.calculate(atwSubsystem.getArmPositionDegrees(), armSet);
         armOutput = (armOutput > .3)?.3:(armOutput< -.3)?-.3:armOutput;
         this.atwSubsystem.setArmMotors(armOutput);
+
         double telescopeOutput = telePidController.calculate(atwSubsystem.getTelescopePosition(), positions[1]);
         telescopeOutput = (telescopeOutput > .5)?.5:(telescopeOutput<-.5)?-.5:telescopeOutput;
-        telescopeOutput = (Math.abs(atwSubsystem.getTelescopePosition()-positions[1]) <= .1d)?0d:telescopeOutput;
+        telescopeOutput = (Math.abs(atwSubsystem.getTelescopePosition()-positions[1]) <= 100)?0d:telescopeOutput;
         this.atwSubsystem.setTeleMotors(telescopeOutput);
-        double wristOutput = wristPidController.calculate(atwSubsystem.getWristPosition(), positions[2]);
+
+        double wristSet = positions[2] + (this.wristAdjust.get()*-300);
+        double wristOutput = wristPidController.calculate(atwSubsystem.getWristPosition(), wristSet);
         wristOutput = (wristOutput > .4)?.4:(wristOutput<-.4)?-.4:wristOutput;
         this.atwSubsystem.setWristMotor(wristOutput);
          
