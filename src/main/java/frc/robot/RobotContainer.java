@@ -183,11 +183,12 @@ public class RobotContainer {
    }
 
     public Command getAutonomousCommand() {
+        //return null;
         // HashMap<String, Command> eventMap = new HashMap<>();
         // eventMap.put("marker1", new PrintCommand("Passed marker 1"));
         // eventMap.put("marker2", new PrintCommand("passed marker 2"));
         // return new PathPlannerWEventsCmd(swerveSubsystem, traj, eventMap);
-        return new AutoACmd(swerveSubsystem);
         //return new AutoACmd(swerveSubsystem);
+        return new AutoACmd(swerveSubsystem);
     }
 }
