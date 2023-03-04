@@ -49,7 +49,7 @@ public class SwerveModule {
         
         resetEncoders();
         SwerveModuleState state = new SwerveModuleState();
-        this.absEncOffset = Shuffleboard.getTab("Drivetrain").add(""+ absoluteEncoder.getDeviceID() + " offset", this.absoluteEncoderOffsetDeg).getEntry();
+        this.absEncOffset = Shuffleboard.getTab("Drivetrain").add(""+ absoluteEncoder.getDeviceID() + " turning", getTurningPosition()).getEntry();
         this.actualState = Shuffleboard.getTab("Drivetrain").add("Swerve[" + absoluteEncoder.getDeviceID() + "] actual state", getState().toString()).getEntry();
         this.desiredState = Shuffleboard.getTab("Drivetrain").add("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString()).getEntry();
         this.init = Shuffleboard.getTab("Drivetrain").add("" + absoluteEncoder.getDeviceID() +" initialized",initialized).getEntry();
@@ -79,11 +79,11 @@ public class SwerveModule {
     }
 
     public double getAbsoluteEncoderDeg() {
-        return absoluteEncoder.getAbsolutePosition();
+        return (absoluteEncoder.getAbsolutePosition() - absoluteEncoderOffsetDeg)%360;
     }
 
     public void setRelative(double toSet){
-        turningMotor.setSelectedSensorPosition(toSet);
+        turningMotor.setSelectedSensorPosition(toSet / 14 / Math.PI * 2048 * 150);
     }
     public void updateOffset(double offset){
         this.absoluteEncoderOffsetDeg = offset;
@@ -125,7 +125,7 @@ public class SwerveModule {
     public void outputStates(){
         this.actualState.setString(getState().toString());
         this.init.setBoolean(this.initialized);
-        this.absEncOffset.setDouble(this.absoluteEncoderOffsetDeg);
+        this.absEncOffset.setDouble(getTurningPosition());
         this.absAngle.setDouble(getAbsoluteEncoderDeg());
     }
     public void stop() {

@@ -64,10 +64,10 @@ public final class Constants {
         public static final int kFrontRightDriveAbsoluteEncoderPort = 3;
         public static final int kBackRightDriveAbsoluteEncoderPort = 2;
 
-        public static double kFrontLeftDriveAbsoluteEncoderOffsetDeg = 0;
-        public static double kBackLeftDriveAbsoluteEncoderOffsetDeg = 0;
-        public static double kFrontRightDriveAbsoluteEncoderOffsetDeg = 0;
-        public static double kBackRightDriveAbsoluteEncoderOffsetDeg = 0;
+        public static double kFrontLeftDriveAbsoluteEncoderOffsetDeg = 254.35;
+        public static double kBackLeftDriveAbsoluteEncoderOffsetDeg = 343.04;
+        public static double kFrontRightDriveAbsoluteEncoderOffsetDeg = 108.72;
+        public static double kBackRightDriveAbsoluteEncoderOffsetDeg = 208.92;
 
         public static final double kPhysicalMaxSpeedMetersPerSecond = 10;
         public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 6 * Math.PI;
@@ -135,8 +135,8 @@ public final class Constants {
         public static final int k_TELESCOPE_DRIVE_FOLLOW_ID = 9;
         public static final boolean k_MOTORS_REVERSED = false;
         public static double telescopeOffset = 0;
-        public static final double k_FULL_EXTENSION = 9000;
-        public static final double k_FULL_RETRACTION = 0;
+        public static final double k_FULL_EXTENSION = 45;
+        public static final double k_FULL_RETRACTION = 1;
         public static final int k_ENC_PORT_A = 0;
         public static final int k_ENC_PORT_B = 1;
         public static final boolean k_ENC_REV = false;

@@ -57,7 +57,7 @@ public class AutoRecorderCmd extends CommandBase{
 	FileWriter writer;
 	
 	long startTime;
-
+	boolean isOn;
 	static final String autoFile = AutoRecPlayConstants.autoFile;
 
 	public AutoRecorderCmd(SwerveSubsystem swerveSubsystem, ATWSubsystem atwSubsystem, IntakeSubsystem intakeSubsystem) throws IOException{
@@ -72,7 +72,9 @@ public class AutoRecorderCmd extends CommandBase{
 		if(writer != null)
 		{
 		//start each "frame" with the elapsed time since we started recording
-        if(System.currentTimeMillis() - startTime >= (15*1000));
+		if(System.currentTimeMillis() - startTime >= (15*1000)){
+			return;
+		}
 
 		writer.append("" + (System.currentTimeMillis()-startTime));
 		

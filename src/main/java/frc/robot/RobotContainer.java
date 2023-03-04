@@ -82,12 +82,12 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         try{
-            new Trigger(m_controller::getRightStickButtonPressed).onTrue(new AutoRecorderCmd(swerveSubsystem,atwSubsystem,intakeSubsystem));
+            new Trigger(m_controller::getLeftBumper).onTrue(new AutoRecorderCmd(swerveSubsystem,atwSubsystem,intakeSubsystem));
         }catch(IOException e){
             e.printStackTrace();
         }
-        new Trigger(m_controller::getBackButtonPressed).onTrue(new SavePosCommand(swerveSubsystem));
-        new Trigger(m_controller::getStartButtonPressed).onTrue(new ResetWheelsCommand(swerveSubsystem));
+        new Trigger(m_controller::getBackButtonPressed).onTrue(new ZeroGyroscope(swerveSubsystem));
+        new Trigger(m_controller::getStartButtonPressed).onTrue(new CalibrateWheelsCmd(swerveSubsystem));
         //new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheels(swerveSubsystem));
         //new Trigger(m_controller::getBButtonPressed).onTrue(new UnlockWheels(swerveSubsystem));
         //zero that bih!
