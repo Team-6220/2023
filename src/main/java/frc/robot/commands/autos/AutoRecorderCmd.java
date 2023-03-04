@@ -6,6 +6,7 @@ import java.io.IOException;
 import frc.robot.Constants.AutoRecPlayConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.*;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -50,7 +51,7 @@ import edu.wpi.first.math.kinematics.*;
 */
 
 
-public class AutoRecorderCmd{
+public class AutoRecorderCmd extends CommandBase{
 	
 	//this object writes values into the file we specify
 	FileWriter writer;
@@ -59,9 +60,10 @@ public class AutoRecorderCmd{
 
 	static final String autoFile = AutoRecPlayConstants.autoFile;
 
-	public AutoRecorderCmd() throws IOException{
+	public AutoRecorderCmd(SwerveSubsystem swerveSubsystem, ATWSubsystem atwSubsystem, IntakeSubsystem intakeSubsystem) throws IOException{
 			startTime = System.currentTimeMillis();
 			writer = new FileWriter(autoFile);
+            record(swerveSubsystem, atwSubsystem, intakeSubsystem);
 	}
 	
 
@@ -70,6 +72,8 @@ public class AutoRecorderCmd{
 		if(writer != null)
 		{
 		//start each "frame" with the elapsed time since we started recording
+        if(System.currentTimeMillis() - startTime >= (15*1000));
+
 		writer.append("" + (System.currentTimeMillis()-startTime));
 		
 		

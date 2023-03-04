@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -78,10 +79,11 @@ public class SwerveModule {
     }
 
     public double getAbsoluteEncoderDeg() {
-        double angle = absoluteEncoder.getAbsolutePosition();
-        angle -= absoluteEncoderOffsetDeg;
-        angle %= 360;
-        return angle;
+        return absoluteEncoder.getAbsolutePosition();
+    }
+
+    public void setRelative(double toSet){
+        turningMotor.setSelectedSensorPosition(toSet);
     }
     public void updateOffset(double offset){
         this.absoluteEncoderOffsetDeg = offset;

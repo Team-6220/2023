@@ -18,7 +18,7 @@ import frc.robot.Constants.DriveConstants;
 public class SwerveSubsystem extends SubsystemBase {
     private boolean lock = false;
     ShuffleboardTab driveTab = Shuffleboard.getTab("Drivetrain");
-    private final SwerveModule frontLeft = new SwerveModule(
+    public final SwerveModule frontLeft = new SwerveModule(
             DriveConstants.kFrontLeftDriveMotorPort,
             DriveConstants.kFrontLeftTurningMotorPort,
             DriveConstants.kFrontLeftDriveEncoderReversed,
@@ -26,7 +26,7 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kFrontLeftDriveAbsoluteEncoderPort,
             DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetDeg);
 
-    private final SwerveModule frontRight = new SwerveModule(
+    public final SwerveModule frontRight = new SwerveModule(
             DriveConstants.kFrontRightDriveMotorPort,
             DriveConstants.kFrontRightTurningMotorPort,
             DriveConstants.kFrontRightDriveEncoderReversed,
@@ -34,7 +34,7 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kFrontRightDriveAbsoluteEncoderPort,
             DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetDeg);
 
-    private final SwerveModule backLeft = new SwerveModule(
+    public final SwerveModule backLeft = new SwerveModule(
             DriveConstants.kBackLeftDriveMotorPort,
             DriveConstants.kBackLeftTurningMotorPort,
             DriveConstants.kBackLeftDriveEncoderReversed,
@@ -42,7 +42,7 @@ public class SwerveSubsystem extends SubsystemBase {
             DriveConstants.kBackLeftDriveAbsoluteEncoderPort,
             DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetDeg);
 
-    private final SwerveModule backRight = new SwerveModule(
+    public final SwerveModule backRight = new SwerveModule(
             DriveConstants.kBackRightDriveMotorPort,
             DriveConstants.kBackRightTurningMotorPort,
             DriveConstants.kBackRightDriveEncoderReversed,
@@ -155,6 +155,11 @@ public class SwerveSubsystem extends SubsystemBase {
         frontRight.outputStates();
         //System.out.println("set module states subsystem: " + desiredStates[0].angle.getDegrees());
         setModulePositions();
+    }
+
+    public SwerveModuleState[] getSwerveModuleStates(){
+        SwerveModuleState[] arr = {frontLeft.getState(),frontRight.getState(),backLeft.getState(),backRight.getState()};
+        return arr;
     }
 
     public void setModulePositions(){

@@ -1,5 +1,8 @@
 package frc.robot;
 
+import java.io.*;
+import java.util.*;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -10,12 +13,15 @@ import frc.robot.commands.ATWJoystickCmd;
 import frc.robot.commands.ATWPositionCmd;
 import frc.robot.commands.IntakeDefaultCommand;
 import frc.robot.commands.ZeroGyroscope;
+import frc.robot.commands.autos.*;
 import frc.robot.commands.autos.AutoPlayerCmd;
 import frc.robot.commands.autos.AutoRecorderCmd;
 import frc.robot.commands.autos.PathPlannerWEventsCmd;
 import frc.robot.commands.autos.SampleAutoCommand;
 import frc.robot.commands.drive.CalibrateWheelsCmd;
 import frc.robot.commands.drive.LockWheels;
+import frc.robot.commands.drive.ResetWheelsCommand;
+import frc.robot.commands.drive.SavePosCommand;
 import frc.robot.commands.drive.SwerveJoystickCmd;
 import frc.robot.commands.drive.UnlockWheels;
 import frc.robot.subsystems.ATWSubsystem;
@@ -75,9 +81,13 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
-        new Trigger(m_controller::getRightStickButtonPressed).onTrue(new AutoRecorderCmd(swerveSubsystem,atwSubsystem,intakeSubsystem));
-        new Trigger(m_controller::getBackButtonPressed).onTrue(new ZeroGyroscope(swerveSubsystem));
-        new Trigger(m_controller::getStartButtonPressed).onTrue(new CalibrateWheelsCmd(swerveSubsystem));
+        try{
+            new Trigger(m_controller::getRightStickButtonPressed).onTrue(new AutoRecorderCmd(swerveSubsystem,atwSubsystem,intakeSubsystem));
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        new Trigger(m_controller::getBackButtonPressed).onTrue(new SavePosCommand(swerveSubsystem));
+        new Trigger(m_controller::getStartButtonPressed).onTrue(new ResetWheelsCommand(swerveSubsystem));
         //new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheels(swerveSubsystem));
         //new Trigger(m_controller::getBButtonPressed).onTrue(new UnlockWheels(swerveSubsystem));
         //zero that bih!
@@ -189,7 +199,11 @@ public class RobotContainer {
         // eventMap.put("marker1", new PrintCommand("Passed marker 1"));
         // eventMap.put("marker2", new PrintCommand("passed marker 2"));
         // return new PathPlannerWEventsCmd(swerveSubsystem, traj, eventMap);
-        return new AutoPlayerCmd(swerveSubsystem,atwSubsystem,intakeSubsystem);
-        //return new AutoACmd(swerveSubsystem);
+        try{
+            return new AutoPlayerCmd(swerveSubsystem,atwSubsystem,intakeSubsystem);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        return new AutoACmd(swerveSubsystem);
     }
 }
