@@ -153,4 +153,16 @@ public class ATWSubsystem extends SubsystemBase{
         setWristMotor(0);
         this.wristOutput.setDouble(0);
     }
+
+    public double getTeleOut(){
+        return this.telescopeDriveLeader.getMotorOutputPercent();
+    }
+
+    public double getArmOut(){
+        return this.armDriveLeader.get();
+    }
+
+    public double getWristOut(){
+        return this.wristDriveMotor.getMotorOutputPercent();
+    }
 }

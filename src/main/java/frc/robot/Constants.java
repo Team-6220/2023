@@ -11,6 +11,10 @@ import edu.wpi.first.math.util.Units;
 
 public final class Constants {
 
+    public static final class AutoRecPlayConstants{
+        public static final int autoNumber=1;
+        public static final String autoFile = new String("C:\\Users\\Daniel Wu\\Documents\\GitHub\\2023\\src\\main\\deploy\\autos\\AutoNumber" + autoNumber + ".csv");
+    }
     public static final class ModuleConstants {
         public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
         public static final double kDriveMotorGearRatio = 1 / 6.75;

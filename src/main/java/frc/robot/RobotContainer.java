@@ -10,7 +10,8 @@ import frc.robot.commands.ATWJoystickCmd;
 import frc.robot.commands.ATWPositionCmd;
 import frc.robot.commands.IntakeDefaultCommand;
 import frc.robot.commands.ZeroGyroscope;
-import frc.robot.commands.autos.AutoACmd;
+import frc.robot.commands.autos.AutoPlayerCmd;
+import frc.robot.commands.autos.AutoRecorderCmd;
 import frc.robot.commands.autos.PathPlannerWEventsCmd;
 import frc.robot.commands.autos.SampleAutoCommand;
 import frc.robot.commands.drive.CalibrateWheelsCmd;
@@ -74,6 +75,7 @@ public class RobotContainer {
     }
 
     private void configureButtonBindings() {
+        new Trigger(m_controller::getRightStickButtonPressed).onTrue(new AutoRecorderCmd(swerveSubsystem,atwSubsystem,intakeSubsystem));
         new Trigger(m_controller::getBackButtonPressed).onTrue(new ZeroGyroscope(swerveSubsystem));
         new Trigger(m_controller::getStartButtonPressed).onTrue(new CalibrateWheelsCmd(swerveSubsystem));
         //new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheels(swerveSubsystem));
@@ -187,7 +189,7 @@ public class RobotContainer {
         // eventMap.put("marker1", new PrintCommand("Passed marker 1"));
         // eventMap.put("marker2", new PrintCommand("passed marker 2"));
         // return new PathPlannerWEventsCmd(swerveSubsystem, traj, eventMap);
-        return new AutoACmd(swerveSubsystem);
+        return new AutoPlayerCmd(swerveSubsystem,atwSubsystem,intakeSubsystem);
         //return new AutoACmd(swerveSubsystem);
     }
 }
