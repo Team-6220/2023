@@ -12,6 +12,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -25,9 +26,9 @@ public class ATWSubsystem extends SubsystemBase{
     private final SparkMaxPIDController armPidController;
     private final RelativeEncoder armEncoder;
     private final GenericEntry armAngle, armOutput, telescopeReading, telescopeOutput;
-    private final TalonSRX telescopeDriveLeader;
-    private final VictorSPX telescopeDriveFollower;
-    private final Encoder telescopeEncoder;
+    private final CANSparkMax telescopeDriveLeader;
+    private final CANSparkMax telescopeDriveFollower;
+    private final RelativeEncoder telescopeEncoder;
     private final TalonSRX wristDriveMotor;
     //private final Encoder wristEncoder;
     private final GenericEntry wristReading, wristOutput;
@@ -57,16 +58,19 @@ public class ATWSubsystem extends SubsystemBase{
         this.armDriveLeader.burnFlash();
 
         //init telescope lead (has to be talon)
-        this.telescopeDriveLeader = new TalonSRX(TelescopeConstants.k_TELESCOPE_DRIVE_LEADER_ID);
+        this.telescopeDriveLeader = new CANSparkMax(3, MotorType.kBrushless);
+        this.telescopeDriveLeader.setInverted(false);
+        this.telescopeDriveLeader.setIdleMode(IdleMode.kBrake);
         this.telescopeDriveLeader.setInverted(true);
-        this.telescopeDriveLeader.setNeutralMode(NeutralMode.Brake);
         //init telescope follow (has to be victor)
-        this.telescopeDriveFollower = new VictorSPX(TelescopeConstants.k_TELESCOPE_DRIVE_FOLLOW_ID);
+        this.telescopeDriveFollower = new CANSparkMax(4, MotorType.kBrushless);
         this.telescopeDriveFollower.setInverted(false);
         this.telescopeDriveFollower.follow(telescopeDriveLeader);
-        this.telescopeDriveFollower.setNeutralMode(NeutralMode.Brake);
+        this.telescopeDriveFollower.setInverted(true);
+        this.telescopeDriveFollower.setIdleMode(IdleMode.kBrake);
+
+        this.telescopeEncoder = telescopeDriveLeader.getEncoder(Type.kHallSensor, 42);
         //throughbore encoder (encoding type changes the pulses per revolution (higher = more precision))
-        this.telescopeEncoder = new Encoder(TelescopeConstants.k_ENC_PORT_A, TelescopeConstants.k_ENC_PORT_B, true, EncodingType.k4X);
         //this.teleEncoder = new DutyCycleEncoder(1);
         //TelescopeConstants.telescopeOffset = teleEncoder.get();
 
@@ -124,18 +128,18 @@ public class ATWSubsystem extends SubsystemBase{
     }
     public double getTelescopePosition(){
         //update position on shuffleboard
-        return (this.telescopeEncoder.get());
+        return (this.telescopeEncoder.getPosition());
     }
     public void setTeleMotors(double input){
-        if(getTelescopePosition() >= TelescopeConstants.k_FULL_EXTENSION && input > 0){
-            //stop it from extending beyond full
-            input = 0;
-        }
-        if(getTelescopePosition() <= TelescopeConstants.k_FULL_RETRACTION && input < 0){
-            //stop it from extending beyond full
-            input = 0;
-        }
-        telescopeDriveLeader.set(ControlMode.PercentOutput, input);
+        // if(getTelescopePosition() >= TelescopeConstants.k_FULL_EXTENSION && input > 0){
+        //     //stop it from extending beyond full
+        //     input = 0;
+        // }
+        // if(getTelescopePosition() <= TelescopeConstants.k_FULL_RETRACTION && input < 0){
+        //     //stop it from extending beyond full
+        //     input = 0;
+        // }
+        telescopeDriveLeader.set(input);
         this.telescopeOutput.setDouble(input);
     }
     public void stopTeleMotors(){
