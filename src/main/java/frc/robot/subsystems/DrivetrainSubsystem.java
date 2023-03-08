@@ -83,7 +83,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
   private SwerveModuleState[] m_states = {new SwerveModuleState(),new SwerveModuleState(),new SwerveModuleState(),new SwerveModuleState()};
 private boolean lock, auto;
-private final GenericEntry isLocked, pitch, roll, currPose, autoRunning;
+private final GenericEntry isLocked, pitch, roll, currPose, autoRunning, angle, flstate, frstate, blstate,brstate;
 
   public DrivetrainSubsystem() {
         new Thread(() -> {
@@ -103,6 +103,11 @@ private final GenericEntry isLocked, pitch, roll, currPose, autoRunning;
     this.roll = tab.add("roll", 0).getEntry();
     this.currPose = tab.add("currPose", getPose().toString()).getEntry();
     this.autoRunning = tab.add("autoRunning", auto).getEntry();
+    this.angle = tab.add("gyro angle", 0).getEntry();
+    this.flstate = tab.add("flstate", "").getEntry();
+    this.frstate = tab.add("frstate", "").getEntry();
+    this.blstate = tab.add("blstate", "").getEntry();
+    this.brstate = tab.add("brstate", "").getEntry();
     // There are 4 methods you can call to create your swerve modules.
     // The method you use depends on what motors you are using.
     //
@@ -183,11 +188,11 @@ private final GenericEntry isLocked, pitch, roll, currPose, autoRunning;
    */
   public void zeroHeading() {
         m_navx.reset();
-        
+        m_navx.zeroYaw();
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(m_navx.getCompassHeading(), 360);
+        return Math.IEEEremainder(m_navx.getYaw(), 360);
     }
 
   public Rotation2d getGyroscopeRotation() {
@@ -201,7 +206,7 @@ private final GenericEntry isLocked, pitch, roll, currPose, autoRunning;
         this.positions[1] = new SwerveModulePosition();
         this.positions[2] = new SwerveModulePosition();
         this.positions[3] = new SwerveModulePosition();
-        odometer.resetPosition(new Rotation2d(0), positions, getPose());
+        odometer.resetPosition(getGyroscopeRotation(), positions, getPose());
   }
   public void drive(SwerveModuleState[] states) {
     m_states = states;
@@ -255,6 +260,11 @@ private final GenericEntry isLocked, pitch, roll, currPose, autoRunning;
     isLocked.setBoolean(lock);
     currPose.setString(getPose().toString());
     autoRunning.setBoolean(auto);
+    angle.setDouble(getGyroscopeRotation().getDegrees());
+    flstate.setString(states[0].toString());
+    frstate.setString(states[1].toString());
+    blstate.setString(states[2].toString());
+    brstate.setString(states[3].toString());
     updatePositions(states);
   }
 }

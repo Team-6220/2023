@@ -33,7 +33,7 @@ public class ATWPositionCmd extends CommandBase{
         this.atwSubsystem.setArmMotors(armOutput);
 
         double telescopeOutput = telePidController.calculate(atwSubsystem.getTelescopePosition(), positions[1]);
-        telescopeOutput = (telescopeOutput > .4)?.4:(telescopeOutput<-.4)?-.4:telescopeOutput;
+        telescopeOutput = (telescopeOutput > .3)?.3:(telescopeOutput<-.3)?-.3:telescopeOutput;
         telescopeOutput = (Math.abs(atwSubsystem.getTelescopePosition()-positions[1]) <= 1)?0d:telescopeOutput;
         this.atwSubsystem.setTeleMotors(telescopeOutput);
 

@@ -4,6 +4,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
@@ -15,6 +16,12 @@ public class DriveDistanceCommand extends CommandBase{
     private final double[] newPos;
     private Pose2d currPose;
     private final Pose2d initPose;
+    private SwerveModuleState[]states = {
+        new SwerveModuleState(),
+        new SwerveModuleState(),
+        new SwerveModuleState(),
+        new SwerveModuleState()
+    };
     public DriveDistanceCommand(DrivetrainSubsystem drivetrainSubsystem, double[] newPos){
         this.drivetrainSubsystem = drivetrainSubsystem;
         this.newPos = newPos;
@@ -24,21 +31,21 @@ public class DriveDistanceCommand extends CommandBase{
         drivetrainSubsystem.resetOdometry();
         this.currPose = drivetrainSubsystem.getPose();
         this.initPose = drivetrainSubsystem.getPose();
+        
         addRequirements(drivetrainSubsystem);
     }
 
     @Override
     public void execute() {
         currPose = drivetrainSubsystem.getPose();
-        drivetrainSubsystem.drive(  
-        Constants.m_kinematics.toSwerveModuleStates(
-        ChassisSpeeds.fromFieldRelativeSpeeds(
-                xPID.calculate(newPos[0] - (currPose.getX()-initPose.getX())),
-                0,
-                0,
-                drivetrainSubsystem.getGyroscopeRotation()
-            )
-        ));
+        double speed = xPID.calculate(currPose.getX() - initPose.getX(), newPos[0]);
+        states[0] = new SwerveModuleState(speed, new Rotation2d(0));
+        states[1] = new SwerveModuleState(speed, new Rotation2d(0));
+        states[2] = new SwerveModuleState(speed, new Rotation2d(0));
+        states[3] = new SwerveModuleState(speed, new Rotation2d(0));
+        drivetrainSubsystem.drive( 
+            states
+        );
     }
 
     @Override
@@ -49,15 +56,12 @@ public class DriveDistanceCommand extends CommandBase{
 
     @Override
     public void end(boolean interrupted) {
+        states[0] = new SwerveModuleState(0, new Rotation2d(0));
+        states[1] = new SwerveModuleState(0, new Rotation2d(0));
+        states[2] = new SwerveModuleState(0, new Rotation2d(0));
+        states[3] = new SwerveModuleState(0, new Rotation2d(0));
         drivetrainSubsystem.drive(
-            Constants.m_kinematics.toSwerveModuleStates(
-                ChassisSpeeds.fromFieldRelativeSpeeds (
-                    0.0,
-                    0.0,
-                    0.0,
-                    drivetrainSubsystem.getGyroscopeRotation()
-                )
-            )
+            states
         );
     }
 
