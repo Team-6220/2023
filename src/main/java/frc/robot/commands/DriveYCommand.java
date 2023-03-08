@@ -13,8 +13,8 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.DrivetrainSubsystem;
 
-public class DriveXCommand extends CommandBase{
-    private final ProfiledPIDController xPID;
+public class DriveYCommand extends CommandBase{
+    private final ProfiledPIDController yPID;
     private final DrivetrainSubsystem drivetrainSubsystem;
     private final double newPos;
     private Pose2d currPose;
@@ -25,10 +25,10 @@ public class DriveXCommand extends CommandBase{
         new SwerveModuleState(),
         new SwerveModuleState()
     };
-    public DriveXCommand(DrivetrainSubsystem drivetrainSubsystem, double newPos){
+    public DriveYCommand(DrivetrainSubsystem drivetrainSubsystem, double newPos){
         this.drivetrainSubsystem = drivetrainSubsystem;
         this.newPos = newPos;
-        this.xPID = new ProfiledPIDController(1, .25, 0, new Constraints(1, 3));
+        this.yPID = new ProfiledPIDController(1, .25, 0, new Constraints(1, 3));
         drivetrainSubsystem.resetOdometry();
         this.currPose = drivetrainSubsystem.getPose();
         this.initPose = drivetrainSubsystem.getPose();
@@ -39,26 +39,20 @@ public class DriveXCommand extends CommandBase{
     @Override
     public void execute() {
         currPose = drivetrainSubsystem.getPose();
-        double speed = xPID.calculate(currPose.getX() - initPose.getX(), newPos);
-        //states[0] = new SwerveModuleState(speed, new Rotation2d(0));
-        //states[1] = new SwerveModuleState(speed, new Rotation2d(0));
-        //states[2] = new SwerveModuleState(speed, new Rotation2d(0));
-        //states[3] = new SwerveModuleState(speed, new Rotation2d(0));
+        double speed = yPID.calculate(currPose.getY() - initPose.getY(), newPos);
+        states[0] = new SwerveModuleState(speed, new Rotation2d(0));
+        states[1] = new SwerveModuleState(speed, new Rotation2d(0));
+        states[2] = new SwerveModuleState(speed, new Rotation2d(0));
+        states[3] = new SwerveModuleState(speed, new Rotation2d(0));
         drivetrainSubsystem.drive( 
-            Constants.m_kinematics.toSwerveModuleStates(    
-                    ChassisSpeeds.fromFieldRelativeSpeeds(
-                        speed,
-                        0d,
-                        0d,
-                        Rotation2d.fromDegrees(drivetrainSubsystem.getHeading())
-            )
-        ));
+            states
+        );
     }
 
     @Override
     public boolean isFinished() {
         currPose = drivetrainSubsystem.getPose();
-        return (Math.abs(newPos - (currPose.getX()-initPose.getX()))<.05);
+        return (Math.abs(newPos - (currPose.getY()-initPose.getY()))<.05);
     }
 
     @Override

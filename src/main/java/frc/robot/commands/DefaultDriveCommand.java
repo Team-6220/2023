@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -14,6 +15,7 @@ public class DefaultDriveCommand extends CommandBase {
     private final DoubleSupplier m_translationXSupplier;
     private final DoubleSupplier m_translationYSupplier;
     private final DoubleSupplier m_rotationSupplier;
+    private final SlewRateLimiter xLimiter, yLimiter, tLimiter;
 
     public DefaultDriveCommand(DrivetrainSubsystem drivetrainSubsystem,
                                DoubleSupplier translationXSupplier,
@@ -23,19 +25,24 @@ public class DefaultDriveCommand extends CommandBase {
         this.m_translationXSupplier = translationXSupplier;
         this.m_translationYSupplier = translationYSupplier;
         this.m_rotationSupplier = rotationSupplier;
-
+        this.xLimiter = new SlewRateLimiter(3);
+        this.yLimiter = new SlewRateLimiter(3);
+        this.tLimiter = new SlewRateLimiter(3);
         addRequirements(drivetrainSubsystem);
     }
 
     @Override
     public void execute() {
         // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
+        double xSpeed = xLimiter.calculate(m_translationXSupplier.getAsDouble());
+        double ySpeed = yLimiter.calculate(m_translationYSupplier.getAsDouble());
+        double tSpeed = tLimiter.calculate(m_rotationSupplier.getAsDouble());
         m_drivetrainSubsystem.drive(
                 Constants.m_kinematics.toSwerveModuleStates(
                     ChassisSpeeds.fromFieldRelativeSpeeds(
-                        m_translationXSupplier.getAsDouble(),
-                        m_translationYSupplier.getAsDouble(),
-                        m_rotationSupplier.getAsDouble(),
+                        xSpeed,
+                        ySpeed,
+                        tSpeed,
                         Rotation2d.fromDegrees(m_drivetrainSubsystem.getHeading())
                 )
             )
