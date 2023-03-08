@@ -192,7 +192,7 @@ private final GenericEntry isLocked, pitch, roll, currPose, autoRunning, angle, 
     }
 
     public double getHeading() {
-        return Math.IEEEremainder(m_navx.getYaw(), 360);
+        return -(m_navx.getYaw() + 180);
     }
 
   public Rotation2d getGyroscopeRotation() {
@@ -260,7 +260,7 @@ private final GenericEntry isLocked, pitch, roll, currPose, autoRunning, angle, 
     isLocked.setBoolean(lock);
     currPose.setString(getPose().toString());
     autoRunning.setBoolean(auto);
-    angle.setDouble(getGyroscopeRotation().getDegrees());
+    angle.setDouble(getHeading());
     flstate.setString(states[0].toString());
     frstate.setString(states[1].toString());
     blstate.setString(states[2].toString());

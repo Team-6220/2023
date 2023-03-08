@@ -16,9 +16,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.ATWJoystickCmd;
 import frc.robot.commands.ATWPositionCmd;
+import frc.robot.commands.CloseSolenoidCmd;
 import frc.robot.commands.DefaultDriveCommand;
-import frc.robot.commands.DriveDistanceCommand;
+import frc.robot.commands.DriveXCommand;
 import frc.robot.commands.IntakeDefaultCommand;
+import frc.robot.commands.ShootCubeCmd;
 import frc.robot.commands.ZeroGyroscope;
 import frc.robot.subsystems.ATWSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -38,26 +40,27 @@ public class RobotContainer {
   private final XboxController m_controller = new XboxController(0);
   private final Joystick m_js = new Joystick(1);
   private final Joystick m_js2 = new Joystick(2);
-  private final double[] zeron = {0, .5, -30};//zero
+  private final double[] zeron = {0, 1, -30};//zero
   private final double[] flatn = {-40, 0.5, -1800};//flat
-  private final double[] zerop = {0, .5, -1800};
+  private final double[] zerop = {0, 1, -1800};
   private final double[] vert = {0, .5, -950};
   //private final double[] forty5 = {-45, .5, -500};//notc
   private final double[] pickupn = {-115, 7.7, -1300};
   private final double[] pickupp = {115, 7.7, -800};//pickup
   private final double[] midn = {-55, 22.7, -725};//mid cone
   private final double[] midp = {55, 22.7, -775};
-  private final double[] highn = {-54, 52, -1000};//high cone
-  private final double[] highp = {54, 52, -500};
+  private final double[] highn = {-54, 50, -1000};//high cone
+  private final double[] highp = {54, 50, -500};
   private final double[] stationp = {34, 10.5, -1038};
   private final double[] stationn = {-34, 10.5, -400};
   private final double[] hovern = {-90, .5, -160};
   private final double[] hoverp = {90, .5, -1760};
   private final double[] siden = {-103, .5, -160};
   private final double[] sidep = {103, .5, -1740};
+  private final double[] autocubehigh = {-55, 33, -639};
 
-  private final double[] pos = {-1d ,0d ,0d};
-  private final double[] pos2 = {0d, -2d, 0d};
+  private final double pos = -3;
+  private final double pos2 = -2;
 
   private final UsbCamera usbCamera;
 
@@ -226,10 +229,17 @@ intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
    */
   public Command getAutonomousCommand() {
     // An ExampleCommand will run in autonomous
+    // return new SequentialCommandGroup(
+    //   new ZeroGyroscope(m_drivetrainSubsystem),
+    //   new DriveXCommand(m_drivetrainSubsystem, pos)
+    // );
     return new SequentialCommandGroup(
-      new ZeroGyroscope(m_drivetrainSubsystem),
-      new DriveDistanceCommand(m_drivetrainSubsystem, pos)
-      );
+      new ATWPositionCmd(atwSubsystem, autocubehigh, () -> 0d, () -> 0d),
+      new ShootCubeCmd(intakeSubsystem),
+      new ATWPositionCmd(atwSubsystem, zeron, () -> 0d, ()->0d),
+      new CloseSolenoidCmd(intakeSubsystem)
+    );
+    
   }
 
   private static double deadband(double value, double deadband) {

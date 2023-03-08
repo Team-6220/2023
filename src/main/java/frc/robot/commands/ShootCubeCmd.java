@@ -14,6 +14,7 @@ public class ShootCubeCmd extends CommandBase{
     @Override
     public void execute() {
         intakeSubsystem.setMotors(IntakeConstants.k_CUBE_OUTTAKE_SPEED);
+        count++;
     }
     @Override
     public boolean isFinished() {
