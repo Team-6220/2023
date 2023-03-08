@@ -18,14 +18,16 @@ public class IntakeSubsystem extends SubsystemBase{
     private final Compressor compressor;
     private final Solenoid solenoid;
     private final GenericEntry solenoidState, compressorState;
+    private boolean pressureSwitch;
     public IntakeSubsystem(){
         this.intakeDrive = new VictorSPX(IntakeConstants.k_INTAKE_MOTOR_ID);
-        this.intakeDrive.setInverted(true);
+        this.intakeDrive.setInverted(false);
         this.intakeDrive.setNeutralMode(NeutralMode.Brake);
         compressor = new Compressor(15, PneumaticsModuleType.REVPH);
         this.solenoid = new Solenoid(15, PneumaticsModuleType.REVPH, IntakeConstants.SOLENOID_PORT);
         solenoidState = Shuffleboard.getTab("ATW").add("solenoid state", false).getEntry();
         compressorState = Shuffleboard.getTab("ATW").add("compressor state", compressor.isEnabled()).getEntry();
+        pressureSwitch = compressor.getPressureSwitchValue();
     }
 
     public void setMotors(double input){
@@ -36,7 +38,8 @@ public class IntakeSubsystem extends SubsystemBase{
         this.intakeDrive.set(ControlMode.PercentOutput, 0);
     }
     public void toggleCompressor(){
-        if(!compressor.isEnabled()){
+        pressureSwitch = compressor.getPressureSwitchValue();
+        if(!compressor.isEnabled() && pressureSwitch){
             compressor.enableDigital();
         }else{
             compressor.disable();
@@ -55,6 +58,10 @@ public class IntakeSubsystem extends SubsystemBase{
     public void periodic() {
         solenoidState.setBoolean(solenoid.get());
         compressorState.setBoolean(compressor.isEnabled());
+        pressureSwitch = compressor.getPressureSwitchValue();
+        if(!pressureSwitch){
+            compressor.disable();
+        }
     }
     
 }

@@ -20,20 +20,47 @@ public class IntakeDefaultCommand extends CommandBase{
 
     @Override
     public void execute(){
+        // if(!intakeSubsystem.getSolenoidState()){
+        //     if(RButton.get() && !RTrigger.get()){
+        //         intakeSubsystem.setMotors(IntakeConstants.k_CUBE_INTAKE_SPEED);
+        //     }else if(RTrigger.get() && !RButton.get()){
+        //         intakeSubsystem.setMotors(IntakeConstants.k_CUBE_OUTTAKE_SPEED);
+        //     }else if(RTrigger.get() && RButton.get()){
+        //         intakeSubsystem.setMotors(-.8);
+        //     }else if(!RTrigger.get() && !RTrigger.get()){
+        //         intakeSubsystem.setMotors(.1);
+        //     } 
+        // }else{
+        //     if(RButton.get() && !RTrigger.get()){
+        //         intakeSubsystem.setMotors(IntakeConstants.k_CONE_INTAKE_SPEED);
+        //     }else if(RTrigger.get() && !RButton.get()){
+        //         intakeSubsystem.setMotors(IntakeConstants.k_CONE_OUTTAKE_SPEED);
+        //     }
+        //     else{
+        //         intakeSubsystem.setMotors(0);
+        //     }
+        // }
         if(RButton.get()){
-            if(intakeSubsystem.getSolenoidState()){
+            if(RTrigger.get()){
+                intakeSubsystem.setMotors(-1);
+            }
+            if(!intakeSubsystem.getSolenoidState()){
                 intakeSubsystem.setMotors(IntakeConstants.k_CUBE_INTAKE_SPEED);
             }else{
                 intakeSubsystem.setMotors(IntakeConstants.k_CONE_INTAKE_SPEED);
             }
         }else if(RTrigger.get()){
-            if(intakeSubsystem.getSolenoidState()){
+            if(!intakeSubsystem.getSolenoidState()){
                 intakeSubsystem.setMotors(IntakeConstants.k_CUBE_OUTTAKE_SPEED);
             }else{
                 intakeSubsystem.setMotors(IntakeConstants.k_CONE_OUTTAKE_SPEED);
             }
         }else{
-            intakeSubsystem.stopMotors();
+            if(!intakeSubsystem.getSolenoidState()){
+                intakeSubsystem.setMotors(.2);
+            }else{
+                intakeSubsystem.setMotors(0);
+            }
         }
         if(LButton.get()){
             intakeSubsystem.toggleSolenoid();
