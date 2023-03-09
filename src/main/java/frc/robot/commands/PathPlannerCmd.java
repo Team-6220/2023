@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj2.command.*;
 
 public class PathPlannerCmd extends SequentialCommandGroup {
     public PathPlannerCmd(DrivetrainSubsystem driveSubsystem,ATWSubsystem atwSubsystem,IntakeSubsystem intakeSubsystem){
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("New Path", new PathConstraints(4, 2));
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("New New Path", new PathConstraints(4, 3));
 
     // This is just an example event map. It would be better to have a constant, global event map
     // in your code that will be used by all path following commands.
@@ -38,29 +38,29 @@ public class PathPlannerCmd extends SequentialCommandGroup {
     double[] pickupp = {115, 7.7, -800};//pickup
     double[] autocubehigh = {-55, 33, -639};
     //initial score
-    eventMap.put("ArmOut", new ATWAutoCmd(atwSubsystem, autocubehigh, () -> 0d, () -> 0d));
-    
+    //eventMap.put("ArmOut", new ATWAutoCmd(atwSubsystem, autocubehigh, () -> 0d, () -> 0d));
     //eventMap.put("Outtake", new ShootCubeCmd(intakeSubsystem));
-    eventMap.put("ArmZero", new ATWAutoCmd(atwSubsystem, zeron, ()->0d, ()->0d));
+    //eventMap.put("ArmZero", new ATWAutoCmd(atwSubsystem, zeron, ()->0d, ()->0d));
+
     //arm down
-    eventMap.put("ArmDown", new ATWAutoCmd(atwSubsystem, pickupp, () -> 0d, () -> 0d));
+    //eventMap.put("ArmDown", new ATWAutoCmd(atwSubsystem, pickupp, () -> 0d, () -> 0d));
 
     //pickup intake
     //eventMap.put("Intake", new IntakeTimedCmd(intakeSubsystem));
 
     //arm up
-    eventMap.put("ArmUp", new ATWAutoCmd(atwSubsystem, zeron, () -> 0d, () -> 0d));
+    //eventMap.put("ArmUp", new ATWAutoCmd(atwSubsystem, zeron, () -> 0d, () -> 0d));
 
     // Create the AutoBuilder. This only needs to be created once when robot code starts, not every time you want to create an auto command. A good place to put this is in RobotContainer along with your subsystems.
     SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
         driveSubsystem::getPose, // Pose2d supplier
         driveSubsystem::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
         Constants.m_kinematics, // SwerveDriveKinematics
-        new PIDConstants(0.1, 0.0, 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
-        new PIDConstants(0.1, 0.0, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
+        new PIDConstants(.5,0.0 , 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+        new PIDConstants(1, 0.25, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
         driveSubsystem::drive, // Module states consumer used to output to the drive subsystem
         eventMap,
-        false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+        true, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
         driveSubsystem // The drive subsystem. Used to properly set the requirements of path following commands
     );
 

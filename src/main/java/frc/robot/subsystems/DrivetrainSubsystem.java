@@ -71,6 +71,7 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule m_frontRightModule;
   private final SwerveModule m_backLeftModule;
   private final SwerveModule m_backRightModule;
+  private long prevTimeMilli;
 
   private final SwerveDriveOdometry odometer;
   private SwerveModulePosition[] positions = {
@@ -179,6 +180,7 @@ private final GenericEntry isLocked, pitch, roll, currPose, autoRunning, angle, 
             BACK_RIGHT_MODULE_STEER_OFFSET
     );
     
+    prevTimeMilli = System.currentTimeMillis();
   }
 
 
@@ -192,7 +194,7 @@ private final GenericEntry isLocked, pitch, roll, currPose, autoRunning, angle, 
     }
 
     public double getHeading() {
-        return -(m_navx.getYaw() + 180);
+        return 0-(m_navx.getYaw());
     }
 
   public Rotation2d getGyroscopeRotation() {
@@ -223,11 +225,15 @@ private final GenericEntry isLocked, pitch, roll, currPose, autoRunning, angle, 
         this.auto = value;
   }
   public void updatePositions(SwerveModuleState[] states){
-     this.positions[0] = new SwerveModulePosition(positions[0].distanceMeters + (states[0].speedMetersPerSecond * .02), states[0].angle);
-     this.positions[1] = new SwerveModulePosition(positions[1].distanceMeters + (states[1].speedMetersPerSecond * .02), states[1].angle);
-     this.positions[2] = new SwerveModulePosition(positions[2].distanceMeters + (states[2].speedMetersPerSecond * .02), states[2].angle);
-     this.positions[3] = new SwerveModulePosition(positions[3].distanceMeters + (states[3].speedMetersPerSecond * .02), states[3].angle);
+        long time = System.currentTimeMillis();
+        long diff = time - prevTimeMilli;
+     this.positions[0] = new SwerveModulePosition(positions[0].distanceMeters + (m_frontLeftModule.getDriveVelocity() * diff), states[0].angle);
+     this.positions[1] = new SwerveModulePosition(positions[1].distanceMeters + (m_frontRightModule.getDriveVelocity() * diff), states[1].angle);
+     this.positions[2] = new SwerveModulePosition(positions[2].distanceMeters + (m_backLeftModule.getDriveVelocity() * diff), states[2].angle);
+     this.positions[3] = new SwerveModulePosition(positions[3].distanceMeters + (m_backRightModule.getDriveVelocity() * diff), states[3].angle);
+     prevTimeMilli = time;
      odometer.update(getGyroscopeRotation(), positions);
+
   }
   public void toggleLock(){
         if(this.lock){

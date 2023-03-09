@@ -32,12 +32,12 @@
         "y": 4.5130890261780525
       },
       "prevControl": {
-        "x": 3.6610732165063817,
-        "y": 4.558804079356343
+        "x": 4.199926410260618,
+        "y": 4.5196707388210875
       },
       "nextControl": {
-        "x": 4.6092892185784375,
-        "y": 4.494152988305977
+        "x": 4.4578009156018314,
+        "y": 4.506777013554028
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -74,22 +74,22 @@
           "Tele Out"
         ],
         "executionBehavior": "sequential",
-        "waitBehavior": "minimum",
-        "waitTime": 0.5
+        "waitBehavior": "after",
+        "waitTime": 1.0
       }
     },
     {
       "anchorPoint": {
-        "x": 6.8753017506035,
-        "y": 4.601457202914406
+        "x": 6.130484260968522,
+        "y": 4.550961101922204
       },
       "prevControl": {
-        "x": 6.698565397130794,
-        "y": 4.5888331776663565
+        "x": 5.953747907495817,
+        "y": 4.538337076674154
       },
       "nextControl": {
-        "x": 7.146028542530342,
-        "y": 4.62079483090918
+        "x": 6.4012110528953645,
+        "y": 4.570298729916978
       },
       "holonomicAngle": 0,
       "isReversal": false,
@@ -97,8 +97,10 @@
       "isLocked": false,
       "isStopPoint": true,
       "stopEvent": {
-        "names": [],
-        "executionBehavior": "parallel",
+        "names": [
+          "Intake"
+        ],
+        "executionBehavior": "sequential",
         "waitBehavior": "minimum",
         "waitTime": 4.0
       }
@@ -151,7 +153,7 @@
       }
     }
   ],
-  "maxVelocity": null,
+  "maxVelocity": 1.0,
   "maxAcceleration": 2.0,
   "isReversed": null,
   "markers": [
