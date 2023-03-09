@@ -201,12 +201,12 @@ private final GenericEntry isLocked, pitch, roll, currPose, autoRunning, angle, 
   public Pose2d getPose(){
         return odometer.getPoseMeters();
   }
-  public void resetOdometry(){
+  public void resetOdometry(Pose2d pose2d){
         this.positions[0] = new SwerveModulePosition();
         this.positions[1] = new SwerveModulePosition();
         this.positions[2] = new SwerveModulePosition();
         this.positions[3] = new SwerveModulePosition();
-        odometer.resetPosition(getGyroscopeRotation(), positions, getPose());
+        odometer.resetPosition(getGyroscopeRotation(), positions, pose2d);
   }
   public void drive(SwerveModuleState[] states) {
     m_states = states;

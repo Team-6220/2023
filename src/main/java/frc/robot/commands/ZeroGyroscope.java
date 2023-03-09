@@ -12,7 +12,7 @@ public class ZeroGyroscope extends CommandBase{
     @Override
     public void initialize(){
         this.m_swerveSubsystem.zeroHeading();
-        this.m_swerveSubsystem.resetOdometry();
+        this.m_swerveSubsystem.resetOdometry(m_swerveSubsystem.getPose());
     }
     @Override
     public void execute(){

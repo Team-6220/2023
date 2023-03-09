@@ -21,6 +21,7 @@ import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DriveXCommand;
 import frc.robot.commands.IntakeDefaultCommand;
 import frc.robot.commands.ShootCubeCmd;
+import frc.robot.commands.PathPlannerCmd;
 import frc.robot.commands.ZeroGyroscope;
 import frc.robot.subsystems.ATWSubsystem;
 import frc.robot.subsystems.DrivetrainSubsystem;
@@ -233,12 +234,7 @@ intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
     //   new ZeroGyroscope(m_drivetrainSubsystem),
     //   new DriveXCommand(m_drivetrainSubsystem, pos)
     // );
-    return new SequentialCommandGroup(
-      new ATWPositionCmd(atwSubsystem, autocubehigh, () -> 0d, () -> 0d),
-      new ShootCubeCmd(intakeSubsystem),
-      new ATWPositionCmd(atwSubsystem, zeron, () -> 0d, ()->0d),
-      new CloseSolenoidCmd(intakeSubsystem)
-    );
+    return new PathPlannerCmd(m_drivetrainSubsystem, atwSubsystem, intakeSubsystem);
     
   }
 

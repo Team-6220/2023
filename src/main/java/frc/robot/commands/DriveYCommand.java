@@ -29,7 +29,7 @@ public class DriveYCommand extends CommandBase{
         this.drivetrainSubsystem = drivetrainSubsystem;
         this.newPos = newPos;
         this.yPID = new ProfiledPIDController(1, .25, 0, new Constraints(1, 3));
-        drivetrainSubsystem.resetOdometry();
+        drivetrainSubsystem.resetOdometry(drivetrainSubsystem.getPose());
         this.currPose = drivetrainSubsystem.getPose();
         this.initPose = drivetrainSubsystem.getPose();
         

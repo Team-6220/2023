@@ -46,9 +46,9 @@ public class ATWAutoCmd extends CommandBase{
     }
     @Override
     public boolean isFinished() {
-        // return (Math.abs(atwSubsystem.getArmPositionDegrees() - positions[0])<=1.5 &&
-        // (Math.abs(atwSubsystem.getTelescopePosition() - positions[1]) <= 1.5) &&
-        // Math.abs(atwSubsystem.getWristPosition() - positions[2])<=90);
-        return false;
+        return (Math.abs(atwSubsystem.getArmPositionDegrees() - positions[0])<=1.5 &&
+        (Math.abs(atwSubsystem.getTelescopePosition() - positions[1]) <= 1.5) &&
+        Math.abs(atwSubsystem.getWristPosition() - positions[2])<=90);
+        //return false;
     }
 }

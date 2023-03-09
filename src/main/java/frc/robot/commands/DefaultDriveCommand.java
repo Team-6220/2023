@@ -27,7 +27,7 @@ public class DefaultDriveCommand extends CommandBase {
         this.m_rotationSupplier = rotationSupplier;
         this.xLimiter = new SlewRateLimiter(3);
         this.yLimiter = new SlewRateLimiter(3);
-        this.tLimiter = new SlewRateLimiter(3);
+        this.tLimiter = new SlewRateLimiter(6);
         addRequirements(drivetrainSubsystem);
     }
 
