@@ -14,12 +14,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ATWAutoCmd;
 import frc.robot.commands.ATWJoystickCmd;
 import frc.robot.commands.ATWPositionCmd;
 import frc.robot.commands.CloseSolenoidCmd;
 import frc.robot.commands.DefaultDriveCommand;
+import frc.robot.commands.DisableCompCmd;
 import frc.robot.commands.DriveXCommand;
 import frc.robot.commands.IntakeDefaultCommand;
+import frc.robot.commands.LockWheelsCmd;
 import frc.robot.commands.ShootCubeCmd;
 import frc.robot.commands.PathPlannerCmd;
 import frc.robot.commands.ZeroGyroscope;
@@ -109,6 +112,7 @@ intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
   private void configureButtonBindings() {
+    new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheelsCmd(m_drivetrainSubsystem));
     // Back button zeros the gyroscope
     new Trigger(m_controller::getBackButtonPressed).onTrue(new ZeroGyroscope(m_drivetrainSubsystem));
         //new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheels(swerveSubsystem));
@@ -234,7 +238,16 @@ intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
     //   new ZeroGyroscope(m_drivetrainSubsystem),
     //   new DriveXCommand(m_drivetrainSubsystem, pos)
     // );
-    return new PathPlannerCmd(m_drivetrainSubsystem, atwSubsystem, intakeSubsystem);
+    return new SequentialCommandGroup(
+      new DisableCompCmd(intakeSubsystem),
+      new ATWAutoCmd(atwSubsystem, autocubehigh, null, null),
+      new ShootCubeCmd(intakeSubsystem),
+      new ATWAutoCmd(atwSubsystem, zeron, null, null),
+      new CloseSolenoidCmd(intakeSubsystem),
+      new PathPlannerCmd(m_drivetrainSubsystem, atwSubsystem, intakeSubsystem, "New Path"),
+      new LockWheelsCmd(m_drivetrainSubsystem)
+    );
+
     
   }
 

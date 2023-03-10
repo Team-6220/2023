@@ -27,8 +27,8 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.*;
 
 public class PathPlannerCmd extends SequentialCommandGroup {
-    public PathPlannerCmd(DrivetrainSubsystem driveSubsystem,ATWSubsystem atwSubsystem,IntakeSubsystem intakeSubsystem){
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup("New New Path", new PathConstraints(4, 3));
+    public PathPlannerCmd(DrivetrainSubsystem driveSubsystem,ATWSubsystem atwSubsystem,IntakeSubsystem intakeSubsystem, String pathname){
+    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(pathname, new PathConstraints(1, 2));
 
     // This is just an example event map. It would be better to have a constant, global event map
     // in your code that will be used by all path following commands.
@@ -44,7 +44,7 @@ public class PathPlannerCmd extends SequentialCommandGroup {
 
     //arm down
     //eventMap.put("ArmDown", new ATWAutoCmd(atwSubsystem, pickupp, () -> 0d, () -> 0d));
-
+    eventMap.put("Lock", new LockWheelsCmd(driveSubsystem));
     //pickup intake
     //eventMap.put("Intake", new IntakeTimedCmd(intakeSubsystem));
 
@@ -56,7 +56,7 @@ public class PathPlannerCmd extends SequentialCommandGroup {
         driveSubsystem::getPose, // Pose2d supplier
         driveSubsystem::resetOdometry, // Pose2d consumer, used to reset odometry at the beginning of auto
         Constants.m_kinematics, // SwerveDriveKinematics
-        new PIDConstants(.5,0.0 , 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
+        new PIDConstants(1, 0 , 0.0), // PID constants to correct for translation error (used to create the X and Y PID controllers)
         new PIDConstants(1, 0.25, 0.0), // PID constants to correct for rotation error (used to create the rotation controller)
         driveSubsystem::drive, // Module states consumer used to output to the drive subsystem
         eventMap,

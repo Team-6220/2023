@@ -226,30 +226,18 @@ private final GenericEntry isLocked, pitch, roll, currPose, autoRunning, angle, 
   }
   public void updatePositions(SwerveModuleState[] states){
         long time = System.currentTimeMillis();
-        long diff = time - prevTimeMilli;
-     this.positions[0] = new SwerveModulePosition(positions[0].distanceMeters + (m_frontLeftModule.getDriveVelocity() * diff), states[0].angle);
-     this.positions[1] = new SwerveModulePosition(positions[1].distanceMeters + (m_frontRightModule.getDriveVelocity() * diff), states[1].angle);
-     this.positions[2] = new SwerveModulePosition(positions[2].distanceMeters + (m_backLeftModule.getDriveVelocity() * diff), states[2].angle);
-     this.positions[3] = new SwerveModulePosition(positions[3].distanceMeters + (m_backRightModule.getDriveVelocity() * diff), states[3].angle);
+        double diff = (double)(time - prevTimeMilli)/1000d;
+        roll.setDouble(positions[0].distanceMeters + (m_frontLeftModule.getDriveVelocity() * diff));
+     this.positions[0] = new SwerveModulePosition(positions[0].distanceMeters + (m_frontLeftModule.getDriveVelocity() * diff), new Rotation2d(m_frontLeftModule.getSteerAngle()));
+     this.positions[1] = new SwerveModulePosition(positions[1].distanceMeters + (m_frontRightModule.getDriveVelocity() * diff), new Rotation2d(m_frontRightModule.getSteerAngle()));
+     this.positions[2] = new SwerveModulePosition(positions[2].distanceMeters + (m_backLeftModule.getDriveVelocity() * diff), new Rotation2d(m_backLeftModule.getSteerAngle()));
+     this.positions[3] = new SwerveModulePosition(positions[3].distanceMeters + (m_backRightModule.getDriveVelocity() * diff), new Rotation2d(m_backRightModule.getSteerAngle()));
      prevTimeMilli = time;
-     odometer.update(getGyroscopeRotation(), positions);
+     odometer.update(Rotation2d.fromDegrees(getHeading()), positions);
 
   }
   public void toggleLock(){
-        if(this.lock){
-            this.lock = false;
-            m_frontLeftModule.set(0, 0);
-            m_frontRightModule.set(0, 0);
-            m_backLeftModule.set(0, 0);
-            m_backRightModule.set(0, 0);
-        }
-        else{
-            this.lock = true;
-            m_frontLeftModule.set(0, Math.toRadians(-45));
-            m_frontRightModule.set(0, Math.toRadians(45));
-            m_backLeftModule.set(0, Math.toRadians(45));
-            m_backRightModule.set(0, Math.toRadians(-45));
-        }
+        this.lock = !this.lock;
         isLocked.setBoolean(lock);
   }
 
@@ -257,16 +245,23 @@ private final GenericEntry isLocked, pitch, roll, currPose, autoRunning, angle, 
   public void periodic() {
     SwerveModuleState[] states = m_states;
     SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
-    m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
-    m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
-    m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
-    m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
-    roll.setDouble(getGyroRoll());
+    if(this.lock){
+        m_frontLeftModule.set(0, 45);
+        m_frontRightModule.set(0, -45);
+        m_backLeftModule.set(0, -45);
+        m_backRightModule.set(0, 45);
+    }else{
+        m_frontLeftModule.set(states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
+        m_frontRightModule.set(states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
+        m_backLeftModule.set(states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
+        m_backRightModule.set(states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
+    }
+    //roll.setDouble(getGyroRoll());
     pitch.setDouble(getGyroPitch());
     isLocked.setBoolean(lock);
     currPose.setString(getPose().toString());
     autoRunning.setBoolean(auto);
-    angle.setDouble(getHeading());
+    angle.setDouble(m_frontLeftModule.getDriveVelocity());
     flstate.setString(states[0].toString());
     frstate.setString(states[1].toString());
     blstate.setString(states[2].toString());
