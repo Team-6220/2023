@@ -25,15 +25,15 @@ public class DefaultDriveCommand extends CommandBase {
         this.m_translationXSupplier = translationXSupplier;
         this.m_translationYSupplier = translationYSupplier;
         this.m_rotationSupplier = rotationSupplier;
-        this.xLimiter = new SlewRateLimiter(3);
-        this.yLimiter = new SlewRateLimiter(3);
-        this.tLimiter = new SlewRateLimiter(6);
+        this.xLimiter = new SlewRateLimiter(16);
+        this.yLimiter = new SlewRateLimiter(16);
+        this.tLimiter = new SlewRateLimiter(16);
         addRequirements(drivetrainSubsystem);
     }
 
     @Override
     public void execute() {
-        // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
+        //You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
         double xSpeed = xLimiter.calculate(m_translationXSupplier.getAsDouble());
         double ySpeed = yLimiter.calculate(m_translationYSupplier.getAsDouble());
         double tSpeed = tLimiter.calculate(m_rotationSupplier.getAsDouble());

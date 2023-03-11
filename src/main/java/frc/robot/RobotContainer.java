@@ -9,6 +9,7 @@ import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -49,24 +50,23 @@ public class RobotContainer {
   private final double[] zerop = {0, 1, -1900};
   private final double[] vert = {0, .5, -950};
   //private final double[] forty5 = {-45, .5, -500};//notc
-  private final double[] pickupn = {-115, 7.7, -1300};
-  private final double[] pickupp = {115, 7.7, -800};//pickup
+  private final double[] pickupn = {-117, 7.7, -1300};
+  private final double[] pickupp = {120, 7.7, -700};//pickup
   private final double[] midn = {-55, 22.7, -725};//mid cone
   private final double[] midp = {55, 22.7, -1275};
   private final double[] highn = {-54, 50, -1000};//high cone
   private final double[] highp = {54, 50, -1000};
-  private final double[] stationp = {40, 11, -1550};
-  private final double[] stationn = {-40, 11, -450};
+  private final double[] stationp = {44, 11, -1450};
+  private final double[] stationn = {-45, 11, -550};
   private final double[] hovern = {-90, .5, -160};
   private final double[] hoverp = {90, .5, -1840};
   private final double[] siden = {-103, .5, -160};
   private final double[] sidep = {103, .5, -1840};
   private final double[] autocubehigh = {-55, 33, -639};
-
+  private final SendableChooser<String> autoChooser = new SendableChooser<>();
+  private String m_autoselected = "New Path";
   private final double pos = -3;
   private final double pos2 = -2;
-
-  private final UsbCamera usbCamera;
 
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -77,6 +77,16 @@ public class RobotContainer {
     // Left stick Y axis -> forward and backwards movement
     // Left stick X axis -> left and right movement
     // Right stick X axis -> rotation
+
+    autoChooser.setDefaultOption("New Path", "New Path");
+    autoChooser.addOption("MidMobA", "MidMobA");
+    autoChooser.addOption("MidMobB", "MidMobB");
+    autoChooser.addOption("MidClimb", "MidClimb");
+    autoChooser.addOption("MidClimbMob", "MidClimbMob");
+    autoChooser.addOption("Top","Top");
+    autoChooser.addOption("Bot", "Bot");
+    autoChooser.addOption("BotClimb", "BotClimb");
+    SmartDashboard.putData(autoChooser);
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
             m_drivetrainSubsystem,
             () -> -modifyAxis(m_controller.getLeftY()) * DrivetrainSubsystem.MAX_VELOCITY_METERS_PER_SECOND,
@@ -99,8 +109,8 @@ intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
 ));
     // Configure the button bindings
     configureButtonBindings();
-    usbCamera = new UsbCamera("cam", 1);
-    CameraServer.startAutomaticCapture();
+    // usbCamera = new UsbCamera("cam", 1);
+    // CameraServer.startAutomaticCapture();
    
     
   }
@@ -118,7 +128,7 @@ intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
         //new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheels(swerveSubsystem));
         //new Trigger(m_controller::getBButtonPressed).onTrue(new UnlockWheels(swerveSubsystem));
         //zero that bih!
-        new Trigger(() -> m_js2.getRawButtonPressed(7)).onTrue(new ATWPositionCmd(
+        new Trigger(() -> m_js2.getRawButtonPressed(7)).onTrue(new ATWAutoCmd(
             atwSubsystem,
             zeron,
             () -> m_js.getThrottle(),
@@ -130,7 +140,7 @@ intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
             () -> m_js.getThrottle(),
             () -> m_js2.getThrottle()
         ));
-        new Trigger(() -> m_js.getRawButtonPressed(7)).onTrue(new ATWPositionCmd(
+        new Trigger(() -> m_js.getRawButtonPressed(7)).onTrue(new ATWAutoCmd(
             atwSubsystem,
             zerop,
             () -> m_js.getThrottle(),
@@ -238,13 +248,14 @@ intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
     //   new ZeroGyroscope(m_drivetrainSubsystem),
     //   new DriveXCommand(m_drivetrainSubsystem, pos)
     // );
+    m_autoselected = autoChooser.getSelected();
     return new SequentialCommandGroup(
       new DisableCompCmd(intakeSubsystem),
       new ATWAutoCmd(atwSubsystem, autocubehigh, null, null),
       new ShootCubeCmd(intakeSubsystem),
       new ATWAutoCmd(atwSubsystem, zeron, null, null),
       new CloseSolenoidCmd(intakeSubsystem),
-      new PathPlannerCmd(m_drivetrainSubsystem, atwSubsystem, intakeSubsystem, "New Path"),
+      new PathPlannerCmd(m_drivetrainSubsystem, atwSubsystem, intakeSubsystem, m_autoselected),
       new LockWheelsCmd(m_drivetrainSubsystem)
     );
 
