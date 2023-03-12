@@ -182,7 +182,7 @@ public final class Constants {
     }
 
     public static final class IntakeConstants{
-        public static final int SOLENOID_PORT = 8;
+        public static final int SOLENOID_PORT = 7;
         public static final double k_CUBE_INTAKE_SPEED = 0.4;
         public static final double k_CUBE_OUTTAKE_SPEED = -0.25;
         public static final double k_CONE_INTAKE_SPEED = 0.75;

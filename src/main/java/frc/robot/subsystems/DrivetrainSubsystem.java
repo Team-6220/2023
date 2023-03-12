@@ -193,6 +193,14 @@ private final GenericEntry isLocked, pitch, roll, currPose, autoRunning, angle, 
         m_navx.zeroYaw();
     }
 
+    public Rotation2d getPitch() {
+      return new Rotation2d(getGyroPitch() * -1 / 180 * Math.PI);
+    }
+
+    public Rotation2d getRoll() {
+      return new Rotation2d(getGyroRoll() * -1 / 180 * Math.PI);
+    }
+
     public double getHeading() {
         return 0-(m_navx.getYaw());
     }

@@ -15,9 +15,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.ATPositionCmd;
 import frc.robot.commands.ATWAutoCmd;
 import frc.robot.commands.ATWJoystickCmd;
 import frc.robot.commands.ATWPositionCmd;
+import frc.robot.commands.AutoBalanceCommand;
+import frc.robot.commands.ChargingStationAuto;
 import frc.robot.commands.CloseSolenoidCmd;
 import frc.robot.commands.DefaultDriveCommand;
 import frc.robot.commands.DisableCompCmd;
@@ -46,12 +49,12 @@ public class RobotContainer {
   private final Joystick m_js = new Joystick(1);
   private final Joystick m_js2 = new Joystick(2);
   private final double[] zeron = {0, 1, -30};//zero
-  private final double[] flatn = {-40, 0.5, -1800};//flat
-  private final double[] zerop = {0, 1, -1900};
+  private final double[] flatn = {-40, 0.5, -1600};//flat
+  private final double[] zerop = {0, 1, -1800};
   private final double[] vert = {0, .5, -950};
   //private final double[] forty5 = {-45, .5, -500};//notc
   private final double[] pickupn = {-117, 7.7, -1300};
-  private final double[] pickupp = {120, 7.7, -700};//pickup
+  private final double[] pickupp = {118, 7.7, -700};//pickup
   private final double[] midn = {-55, 22.7, -725};//mid cone
   private final double[] midp = {55, 22.7, -1275};
   private final double[] highn = {-54, 50, -1000};//high cone
@@ -63,6 +66,7 @@ public class RobotContainer {
   private final double[] siden = {-103, .5, -160};
   private final double[] sidep = {103, .5, -1840};
   private final double[] autocubehigh = {-55, 33, -639};
+  private final double[] telecubehigh = {55, 33, -1000};
   private final SendableChooser<String> autoChooser = new SendableChooser<>();
   private String m_autoselected = "New Path";
   private final double pos = -3;
@@ -86,6 +90,7 @@ public class RobotContainer {
     autoChooser.addOption("Top","Top");
     autoChooser.addOption("Bot", "Bot");
     autoChooser.addOption("BotClimb", "BotClimb");
+    autoChooser.addOption("FollowBot", "FollowBot");
     SmartDashboard.putData(autoChooser);
     m_drivetrainSubsystem.setDefaultCommand(new DefaultDriveCommand(
             m_drivetrainSubsystem,
@@ -124,11 +129,15 @@ intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
   private void configureButtonBindings() {
     new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheelsCmd(m_drivetrainSubsystem));
     // Back button zeros the gyroscope
+    new Trigger(m_controller::getXButtonPressed).onTrue(new AutoBalanceCommand(
+        m_drivetrainSubsystem, m_controller::getXButton
+    ) 
+    );
     new Trigger(m_controller::getBackButtonPressed).onTrue(new ZeroGyroscope(m_drivetrainSubsystem));
         //new Trigger(m_controller::getAButtonPressed).onTrue(new LockWheels(swerveSubsystem));
         //new Trigger(m_controller::getBButtonPressed).onTrue(new UnlockWheels(swerveSubsystem));
         //zero that bih!
-        new Trigger(() -> m_js2.getRawButtonPressed(7)).onTrue(new ATWAutoCmd(
+        new Trigger(() -> m_js2.getRawButtonPressed(7)).onTrue(new ATWPositionCmd(
             atwSubsystem,
             zeron,
             () -> m_js.getThrottle(),
@@ -140,7 +149,7 @@ intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
             () -> m_js.getThrottle(),
             () -> m_js2.getThrottle()
         ));
-        new Trigger(() -> m_js.getRawButtonPressed(7)).onTrue(new ATWAutoCmd(
+        new Trigger(() -> m_js.getRawButtonPressed(7)).onTrue(new ATWPositionCmd(
             atwSubsystem,
             zerop,
             () -> m_js.getThrottle(),
@@ -168,12 +177,13 @@ intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
             () -> m_js2.getThrottle()
         ));
         //mid cone (negative direction)
-        new Trigger(() -> m_js2.getRawButtonPressed(4)).onTrue(new ATWPositionCmd(
-            atwSubsystem,
-            midn,
-            () -> m_js.getThrottle(),
-            () -> m_js2.getThrottle()
-        ));
+        new Trigger(() -> m_js2.getRawButtonPressed(4)).onTrue(
+            new ATWPositionCmd(atwSubsystem,
+             autocubehigh,
+             () -> m_js.getThrottle(),
+             () -> m_js2.getThrottle())
+        );
+        
         //high cone (negative direction)
         new Trigger(() -> m_js2.getRawButtonPressed(5)).onTrue(new ATWPositionCmd(
             atwSubsystem,
@@ -189,7 +199,7 @@ intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
         ));
         new Trigger(() -> m_js.getRawButtonPressed(4)).onTrue(new ATWPositionCmd(
             atwSubsystem,
-            midp,
+            telecubehigh,
             () -> m_js.getThrottle(),
             () -> m_js2.getThrottle()
         ));
@@ -235,6 +245,22 @@ intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
             () -> m_js.getThrottle(),
             () -> m_js2.getThrottle()
         ));
+        new Trigger(() -> m_js2.getRawButton(10)).onTrue(new ATPositionCmd(
+          atwSubsystem, zeron, () -> m_js.getThrottle(),
+          () -> m_js2.getThrottle())
+        );
+        new Trigger(() -> m_js2.getRawButtonPressed(9)).onTrue(new ATWPositionCmd(
+            atwSubsystem,
+            midn,
+            () -> m_js.getThrottle(),
+            () -> m_js2.getThrottle()
+        ));
+        new Trigger(() -> m_js.getRawButtonPressed(9)).onTrue(new ATWPositionCmd(
+            atwSubsystem,
+            midp,
+            () -> m_js.getThrottle(),
+            () -> m_js2.getThrottle()
+        ));
   }
 
   /**
@@ -251,11 +277,15 @@ intakeSubsystem.setDefaultCommand(new IntakeDefaultCommand(
     m_autoselected = autoChooser.getSelected();
     return new SequentialCommandGroup(
       new DisableCompCmd(intakeSubsystem),
+      //new CloseSolenoidCmd(intakeSubsystem),//for cone
       new ATWAutoCmd(atwSubsystem, autocubehigh, null, null),
+      //new ATWAutoCmd(atwSubsystem, highn, null, null),
       new ShootCubeCmd(intakeSubsystem),
+      //new CloseSolenoidCmd(intakeSubsystem),//for cone only
       new ATWAutoCmd(atwSubsystem, zeron, null, null),
       new CloseSolenoidCmd(intakeSubsystem),
-      new PathPlannerCmd(m_drivetrainSubsystem, atwSubsystem, intakeSubsystem, m_autoselected),
+      new PathPlannerCmd(m_drivetrainSubsystem, atwSubsystem, intakeSubsystem, "MidClimb"),
+      new ChargingStationAuto(m_drivetrainSubsystem),
       new LockWheelsCmd(m_drivetrainSubsystem)
     );
 

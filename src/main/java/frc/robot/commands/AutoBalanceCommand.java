@@ -34,22 +34,20 @@ import static frc.robot.Constants.*;
 public class AutoBalanceCommand extends CommandBase{
     private final DrivetrainSubsystem drivetrainSubsystem;
     private final PIDController balancePIDController;
-    public AutoBalanceCommand(DrivetrainSubsystem drivetrainSubsystem){
+    private final Supplier<Boolean> xButton;
+    public AutoBalanceCommand(DrivetrainSubsystem drivetrainSubsystem, Supplier<Boolean> xButton){
         this.drivetrainSubsystem = drivetrainSubsystem;
-        
-        this.balancePIDController = new PIDController(.08, 0, 0);
+        this.xButton = xButton;
+        this.balancePIDController = new PIDController(.075, 0, 0);
         addRequirements(drivetrainSubsystem);
     }
     @Override
     public void execute() {
         //double armSet  = positions[0] + (this.armAdjust.get()*-5);
         double deg = drivetrainSubsystem.getGyroPitch();
-        if(deg<0){//negative, go forwards
-            ChassisSpeeds c = new ChassisSpeeds(balancePIDController.calculate(deg, 0),0d,0d);
+            ChassisSpeeds c = new ChassisSpeeds(-balancePIDController.calculate(deg, 0),0d,0d);
             drivetrainSubsystem.drive(m_kinematics.toSwerveModuleStates(c));
-        }else{//positive, go backwards
 
-        }
 
          
     }
@@ -58,7 +56,7 @@ public class AutoBalanceCommand extends CommandBase{
         // return (Math.abs(atwSubsystem.getArmPositionDegrees() - positions[0])<=1.5 &&
         // (Math.abs(atwSubsystem.getTelescopePosition() - positions[1]) <= 1.5) &&
         // Math.abs(atwSubsystem.getWristPosition() - positions[2])<=90);
-        return Math.abs(drivetrainSubsystem.getGyroPitch())<2;
+        return (!xButton.get()) || (Math.abs(drivetrainSubsystem.getGyroPitch())<2);
     }
     @Override
     public void end(boolean interrupted) {
